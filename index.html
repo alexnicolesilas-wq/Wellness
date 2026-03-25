@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Wellness Journal">
+<title>Wellness Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+ --sage:#8aab8a;--sage-light:#e8f0e8;--sage-mid:#c4d9c4;--input-bg:#f0f6f0;--input-border:#a8c8a8;
+ --mint:#3dab8a;--mint-light:#d4f0e8;
+ --sky:#7ab8d4;--sky-light:#daeef8;
+ --cream:#fafcf9;--white:#ffffff;
+ --text:#2d3d2d;--text-muted:#7a9478;--text-light:#aac4aa;
+ --card-shadow:0 2px 16px rgba(61,171,138,0.08);
+ --card-shadow-hover:0 6px 24px rgba(61,171,138,0.15);
+ --radius:22px;--radius-sm:14px;--radius-xs:10px;
+ --tab-h:72px;
+ --safe-top:env(safe-area-inset-top,0px);
+ --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+[data-dark="true"]{
+ --sage:#6b7b6b;--sage-light:#2e2e2e;--sage-mid:#505050;--input-bg:#363636;--input-border:#606060;
+ --mint:#3dab8a;--mint-light:#1e3330;
+ --sky:#5a9ab4;--sky-light:#1e2a33;
+ --cream:#1a1a1a;--white:#272727;
+ --text:#f0f0f0;--text-muted:#b8b8b8;--text-light:#787878;
+ --card-shadow:0 2px 16px rgba(0,0,0,0.35);
+ --card-shadow-hover:0 6px 24px rgba(0,0,0,0.45);
+}
+html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter',sans-serif;color:var(--text);transition:background 0.3s,color 0.3s;touch-action:manipulation;}
+#app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;position:relative;background:var(--cream);}
+/* HEADER */
+#header{padding:calc(var(--safe-top) + 16px) 20px 12px;background:var(--cream);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#header-title{font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;line-height:1;}
+#header-title .header-gradient{background:linear-gradient(135deg,#3dab8a 0%,#7ab8d4 40%,#a78bfa 75%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header-tagline{font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
+.header-btns{display:flex;gap:8px;align-items:center;}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:none;background:var(--white);box-shadow:var(--card-shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:transform 0.15s;}
+.icon-btn:active{transform:scale(0.92);}
+/* SCROLL AREA */
+#scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--tab-h) + var(--safe-bottom) + 8px);background:var(--cream);}
+#meals-content,#habits-content,#walk-content,#grocery-content,#analytics-content{display:flex;flex-direction:column;gap:18px;padding-bottom:16px;}
+#meals-content>.card,#habits-content>.card,#walk-content>.card,#grocery-content>.card,#analytics-content>.card,#meals-content>.day-nav{margin-bottom:0;}
+/* BOTTOM NAV */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--tab-h) + var(--safe-bottom));background:var(--white);border-top:1px solid var(--sage-mid);display:flex;z-index:100;padding-bottom:var(--safe-bottom);box-shadow:0 -4px 20px rgba(61,171,138,0.08);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;padding:6px 4px;transition:color 0.2s;border-radius:14px;}
+.nav-btn .nav-icon{width:22px;height:22px;stroke:var(--text-muted);transition:transform 0.2s,stroke 0.2s;}
+.nav-btn .nav-label{font-size:10px;font-weight:600;letter-spacing:0.3px;color:var(--text-muted);transition:color 0.2s;}
+.nav-btn.active{background:var(--mint-light);}
+.nav-btn.active .nav-icon{transform:scale(1.15);stroke:var(--mint);}
+.nav-btn.active .nav-label{color:var(--mint);}
+/* CARDS */
+.card{background:var(--white);border-radius:var(--radius);border:1px solid rgba(138,171,138,0.18);box-shadow:0 8px 20px rgba(0,0,0,0.08);margin-bottom:18px;transition:box-shadow 0.2s,transform 0.2s;overflow:hidden;}
+.card-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;min-height:72px;}
+.card-title{font-family:'Outfit',sans-serif;font-size:19px;color:var(--text);}
+.card-body{padding:0 18px 18px;box-sizing:border-box;}
+.card-body input,.card-body textarea{box-sizing:border-box;width:100%;max-width:100%;display:block;}
+.time-input-wrap{display:inline-block;max-width:160px;width:48%;}
+.time-input{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:2px solid var(--input-border);background:var(--input-bg);font-size:16px;color:var(--text);outline:none;font-family:Inter,sans-serif;-webkit-appearance:none;min-height:48px;height:48px;}
+.chevron{font-size:12px;color:var(--text-muted);transition:transform 0.25s;display:inline-block;}
+.chevron::after{content:"\25BE";font-size:14px;}
+.chevron.open{transform:rotate(180deg);}
+.collapsible{overflow:hidden;transition:max-height 0.3s ease,opacity 0.3s ease;max-height:0;opacity:0;}
+.collapsible.open{max-height:2000px;opacity:1;}
+/* PILL TAGS */
+.pill{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;}
+.pill-mint{background:var(--mint-light);color:var(--mint);}
+.pill-sky{background:var(--sky-light);color:var(--sky);}
+.pill-sage{background:var(--sage-light);color:var(--sage);}
+/* DAY NAVIGATOR */
+.day-nav{display:flex;align-items:center;justify-content:space-between;background:var(--white);border-radius:var(--radius);box-shadow:0 10px 28px rgba(0,0,0,0.16);padding:16px 20px;margin-bottom:20px;}
+.day-nav-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--sage-light);color:var(--mint);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:background 0.15s,transform 0.15s;}
+.day-nav-btn:active{transform:scale(0.9);}
+.day-nav-btn:disabled{opacity:0.3;cursor:default;}
+.day-nav-center{text-align:center;}
+.day-nav-date{font-family:'Outfit',sans-serif;font-size:17px;color:var(--text);}
+.day-nav-day{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px;}
+/* SCHEDULE CHECKLIST */
+.sched-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #e8f0e8;}
+.sched-item:last-child{border-bottom:none;}
+.sched-time{font-size:13px;color:var(--text-muted);font-weight:600;min-width:52px;}
+.sched-check{width:22px;height:22px;border-radius:50%;border:2px solid #c4d9c4;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.2s,background 0.2s;}
+.sched-check.done{background:var(--mint);border-color:var(--mint);}
+.sched-check.done::after{content:'';color:white;font-size:11px;font-weight:700;}
+.sched-label{font-size:15px;color:var(--text);flex:1;}
+.sched-label.done{text-decoration:line-through;color:var(--text-muted);}
+/* MEAL CARDS */
+.meal-type{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.meal-name{font-family:'Outfit',sans-serif;font-size:19px;color:var(--text);margin-bottom:6px;}
+.meal-desc{font-size:16px;color:var(--text);line-height:1.6;}
+.recipe-section{margin-top:12px;padding-top:12px;border-top:1px solid #e8f0e8;}
+.recipe-label{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--mint);margin-bottom:10px;}
+.recipe-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.recipe-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:3px 0;}
+.recipe-item-check{width:22px;height:22px;border-radius:6px;border:2px solid #c4d9c4;background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px;}
+.recipe-item-check.done{background:var(--mint);border-color:var(--mint);}
+.recipe-item-check.done::after{content:'\2713';font-size:11px;font-weight:700;color:white;}
+.recipe-item-text{font-size:16px;color:var(--text);line-height:1.5;flex:1;font-weight:500;}
+.recipe-item-text.done{text-decoration:line-through;color:var(--text-light);}
+.recipe-steps{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.recipe-step{display:flex;gap:10px;cursor:pointer;align-items:flex-start;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--mint-light);color:var(--mint);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s;}
+.step-num.done{background:var(--mint);color:white;}
+.step-text{font-size:16px;color:var(--text);line-height:1.6;flex:1;font-weight:500;}
+.step-text.done{text-decoration:line-through;color:var(--text-light);}
+.timer-btn{display:inline-flex;align-items:center;gap:4px;background:var(--sky-light);color:var(--sky);border:none;border-radius:12px;padding:2px 8px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;vertical-align:middle;}
+.notes-input{width:100%;box-sizing:border-box;border:2px solid var(--sage-mid);border-radius:var(--radius-xs);padding:14px 16px;font-family:'Inter',sans-serif;font-size:17px;color:var(--text);background:var(--input-bg);resize:vertical;min-height:88px;margin-top:10px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-text-size-adjust:100%;touch-action:manipulation;}
+.notes-input:focus{border-color:var(--mint);background:var(--input-bg);}
+.notes-input::placeholder{color:var(--text-muted);}
+.meal-meta-box{margin-top:10px;padding:0;background:transparent;border-radius:12px;border:1px solid rgba(138,171,138,0.16);overflow:hidden;}
+.meal-meta-label{font-size:11px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:0.5px;}
+.meal-meta-text{font-size:14px;color:var(--text);line-height:1.45;padding:0 12px 10px;background:var(--sage-light);}
+.meal-meta-toggle{padding:10px 12px !important;min-height:0 !important;background:var(--sage-light);}
+.meal-notes-wrap{margin-top:14px;padding-top:12px;border-top:1px solid rgba(138,171,138,0.18);}
+.meal-notes-label{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+/* TODDLER SNACK */
+.toddler-card{background:var(--white);border-radius:var(--radius-sm);box-shadow:none;border:1.5px dashed var(--text-muted);margin-bottom:10px;}
+.toddler-badge{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-light);background:var(--sage-light);padding:3px 10px;border-radius:10px;}
+/* CHECKIN */
+.checkin-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.energy-btn{padding:6px 14px;border-radius:20px;border:2px solid #c4d9c4;background:none;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.energy-btn.sel{background:var(--mint);border-color:var(--mint);color:white;}
+.bloat-btn{padding:6px 14px;border-radius:20px;border:2px solid #c4d9c4;background:none;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.bloat-btn.sel{background:var(--sky);border-color:var(--sky);color:white;}
+/* HABITS */
+.habit-grid{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+.habit-table{border-collapse:collapse;width:100%;table-layout:fixed;}
+.habit-table colgroup col.habit-label-col{width:38%;}
+.habit-table colgroup col.habit-day-col{width:9%;}
+.habit-table th{font-size:10px;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);padding:6px 2px;text-align:center;vertical-align:bottom;}
+.habit-table td{padding:5px 2px;text-align:center;vertical-align:middle;}
+.habit-name-cell{text-align:left !important;font-size:13px;font-weight:500;color:var(--text);padding-right:6px !important;word-break:break-word;}
+.habit-dot{width:26px;height:26px;border-radius:50%;border:2px solid #c4d9c4;background:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;margin:0 auto;}
+.habit-dot.done{background:var(--mint);border-color:var(--mint);}
+.habit-dot.done::after{content:'\2713';color:white;font-size:11px;font-weight:700;}
+.score-bar-wrap{margin-top:14px;}
+.score-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.score-bar-label{font-size:11px;color:var(--text-muted);min-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.score-bar-bg{flex:1;height:8px;border-radius:4px;background:var(--sage-light);overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#3dab8a,#7ab8d4);transition:width 0.5s ease;}
+.score-pct{font-size:11px;font-weight:700;color:var(--mint);min-width:28px;text-align:right;}
+/* WALK */
+.walk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.walk-day{aspect-ratio:1;border-radius:var(--radius-xs);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--sage-light);cursor:pointer;transition:all 0.2s;border:2px solid transparent;}
+.walk-day .wd-num{font-size:13px;font-weight:700;color:var(--text-muted);}
+.walk-day .wd-label{font-size:9px;color:var(--text-light);}
+.walk-day.done{background:var(--mint);border-color:var(--mint);}
+.walk-day.done .wd-num{color:white;}
+.walk-day.done .wd-label{color:rgba(255,255,255,0.8);}
+.walk-day.today{border-color:var(--mint);}
+.progress-bar{height:12px;border-radius:6px;background:var(--sage-light);overflow:hidden;margin:12px 0 6px;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#3dab8a,#7ab8d4);transition:width 0.5s ease;}
+/* GROCERY */
+.grocery-week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.week-nav-btn{width:34px;height:34px;border-radius:50%;border:none;background:var(--sage-light);color:var(--mint);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all 0.15s;}
+.week-nav-btn:active{transform:scale(0.9);}
+.week-nav-btn:disabled{opacity:0.3;}
+.week-nav-title{font-family:'Outfit',sans-serif;font-size:16px;color:var(--text);}
+.grocery-section-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mint);margin:12px 0 6px;}
+.grocery-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #e8f0e8;cursor:pointer;transition:opacity 0.2s;}
+.grocery-item.checked{opacity:0.4;}
+.grocery-item.checked .gi-name{text-decoration:line-through;color:var(--text-muted);}
+.gi-circle{width:22px;height:22px;border-radius:50%;border:2px solid #c4d9c4;background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.grocery-item.checked .gi-circle{background:var(--mint);border-color:var(--mint);}
+.grocery-item.checked .gi-circle::after{content:'';color:white;font-size:10px;font-weight:700;}
+.gi-name{font-size:14px;color:var(--text);flex:1;}
+.gi-qty{font-size:12px;color:var(--text-muted);font-weight:500;}
+.copy-btn{width:100%;padding:14px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,#3dab8a,#7ab8d4);color:white;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:14px;letter-spacing:0.3px;transition:opacity 0.15s,transform 0.15s;}
+.copy-btn:active{opacity:0.85;transform:scale(0.98);}
+/* ANALYTICS */
+.stat-card{background:var(--sage-light);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;}
+.stat-card-title{font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.stat-big{font-family:'Outfit',sans-serif;font-size:32px;color:var(--mint);}
+.stat-label{font-size:12px;color:var(--text-muted);}
+.weight-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--sage-mid);}
+.weight-date{font-size:12px;color:var(--text-muted);min-width:60px;}
+.weight-val{font-size:15px;font-weight:700;color:var(--text);}
+.weight-delta{font-size:12px;font-weight:600;}
+.weight-delta.pos{color:#e06060;}
+.weight-delta.neg{color:var(--mint);}
+.export-btn{width:100%;padding:14px;border-radius:var(--radius-sm);border:2px solid var(--mint);background:none;color:var(--mint);font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all 0.15s;}
+.export-btn:active{background:var(--mint);color:white;}
+.tips-list{display:flex;flex-direction:column;gap:8px;}
+.tip-item{padding:10px 12px;background:var(--mint-light);border-radius:var(--radius-xs);border-left:3px solid var(--mint);}
+.tip-text{font-size:13px;color:var(--text);line-height:1.5;}
+/* WEIGH IN */
+.weigh-input-row{display:flex;gap:8px;align-items:center;margin-top:10px;}
+.weigh-input{flex:1;padding:10px 14px;border-radius:var(--radius-xs);border:2px solid #c4d9c4;background:var(--sage-light);font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:var(--text);outline:none;transition:border-color 0.2s;}
+.weigh-input:focus{border-color:var(--mint);}
+.save-btn{padding:10px 18px;border-radius:var(--radius-xs);border:none;background:var(--mint);color:white;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.15s;}
+.save-btn:active{opacity:0.8;}
+/* WEEK SELECTOR */
+.week-tab{display:flex;gap:6px;margin-bottom:14px;}
+.week-tab-btn{flex:1;padding:9px;border-radius:var(--radius-xs);border:2px solid #c4d9c4;background:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.week-tab-btn.active{background:var(--mint);border-color:var(--mint);color:white;}
+/* DIVIDER */
+.divider{height:1px;background:#e8f0e8;margin:4px 0 12px;}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--tab-h) + var(--safe-bottom) + 16px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--white);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* TABS */
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* SECTION spacing */
+.section-gap{margin-top:6px;}
+.full-divider{height:1px;background:var(--sage-mid);margin:16px 0;}
+</style>
+</head>
+<body>
+<div id="app">
+ <div id="scroll">
+ <div id="header">
+ <div id="header-title"><div><span class="header-gradient">Wellness Journal</span></div><div class="header-tagline">Mar 19 – 31 · Cleveland</div></div>
+ <div class="header-btns">
+ <button class="icon-btn" onclick="exportAppData()" title="Export app data">⤴</button>
+ <button class="icon-btn" onclick="importAppData()" title="Import app data">⤵</button>
+ <button class="icon-btn" id="dark-toggle" title="Dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+ </div>
+ </div>
+ <!-- MEALS TAB -->
+ <div id="tab-meals" class="tab-content active">
+ <div id="meals-content"></div>
+ </div>
+ <!-- HABITS TAB -->
+ <div id="tab-habits" class="tab-content">
+ <div id="habits-content"></div>
+ </div>
+ <!-- WALK TAB -->
+ <div id="tab-walk" class="tab-content">
+ <div id="walk-content"></div>
+ </div>
+ <!-- GROCERY TAB -->
+ <div id="tab-grocery" class="tab-content">
+ <div id="grocery-content"></div>
+ </div>
+ <!-- ANALYTICS TAB -->
+ <div id="tab-analytics" class="tab-content">
+ <div id="analytics-content"></div>
+ </div>
+ </div>
+ </div>
+ <nav id="nav">
+ <button class="nav-btn active" data-tab="meals" onclick="switchTab('meals')">
+ <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg><span class="nav-label">Meals</span>
+ </button>
+ <button class="nav-btn" data-tab="habits" onclick="switchTab('habits')">
+ <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="10" y2="16"/><line x1="10" y1="16" x2="14" y2="12"/></svg><span class="nav-label">Habits</span>
+ </button>
+ <button class="nav-btn" data-tab="walk" onclick="switchTab('walk')">
+ <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4h-3l-4 8h3l-2 8 9-10h-4z"/></svg><span class="nav-label">Walk</span>
+ </button>
+ <button class="nav-btn" data-tab="grocery" onclick="switchTab('grocery')">
+ <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span class="nav-label">Grocery</span>
+ </button>
+ <button class="nav-btn" data-tab="analytics" onclick="switchTab('analytics')">
+ <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="nav-label">Stats</span>
+ </button>
+ </nav>
+</div>
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+var DAYS = [
+ {date:'2026-03-19',label:'Thu, Mar 19'},
+ {date:'2026-03-20',label:'Fri, Mar 20'},
+ {date:'2026-03-21',label:'Sat, Mar 21'},
+ {date:'2026-03-22',label:'Sun, Mar 22'},
+ {date:'2026-03-23',label:'Mon, Mar 23'},
+ {date:'2026-03-24',label:'Tue, Mar 24'},
+ {date:'2026-03-25',label:'Wed, Mar 25'},
+ {date:'2026-03-26',label:'Thu, Mar 26'},
+ {date:'2026-03-27',label:'Fri, Mar 27'},
+ {date:'2026-03-28',label:'Sat, Mar 28'},
+ {date:'2026-03-29',label:'Sun, Mar 29'},
+ {date:'2026-03-30',label:'Mon, Mar 30'},
+ {date:'2026-03-31',label:'Tue, Mar 31'}
+];
+
+var MEALS = [
+ // Day 0 - Mar 19
+ {
+ breakfast:{name:'Skipped today',desc:'Jumping straight to an early lunch — white bean pasta around 11am.',
+ ingredients:['Nothing needed!'],
+ steps:['No breakfast today — totally fine!','Make sure dinner is solid and iron supplement is on time tonight.']},
+ lunch:{name:'White Bean & Tomato Pasta (~11am)',desc:'Early lunch today — simple pantry pasta before groceries arrive',
+ ingredients:['2 cups pasta','1 can white beans (15oz), drained','1 can crushed tomatoes (28oz)','3 cloves garlic (1.5 tsp minced)','Olive oil','Nutritional yeast, dried basil'],
+ steps:['Cook pasta per package.','Sauté garlic (or minced) in oil 1 min.','Add tomatoes, simmer 5 min.','Add beans, toss with pasta. Top with nooch and basil.'],emily:'Serve her portion plain with butter and a sprinkle of nooch. Add frozen peas for extra nutrition.'},
+ dinner:{name:'Thai Red Lentil Coconut Curry',desc:'Halved recipe — was 2x too much last time. Soft tofu optional in the sauce.',
+ ingredients:['1/2 cup red lentils','1/2 can coconut milk (about 6oz)','1/2 can diced tomatoes','1.5 tsp minced garlic','1/2 tsp ginger','1/2 tsp mild curry powder','Basmati rice','Optional: 1/2 block soft tofu, cubed (add straight to sauce, no air frying needed)'],
+ steps:['Cook rice.','Sauté garlic & ginger 2 min.','Scoop out Emily rice + lentil portion NOW before adding tomatoes.','Add tomatoes, coconut milk. Simmer 15-20 min until lentils tender.','Optional: add soft tofu cubes last 5 min — they absorb the sauce beautifully.','Season. Serve over rice.'],emily:'Serve Emily plain rice with lentils and coconut milk only — she skipped this last time. Try a few frozen peas mixed in.',tip:'Husband not into curry — consider making his bowl milder or swapping his portion to plain lentils with butter. Add 1/4 tsp cayenne to your bowl after plating for spice. Soft tofu (not air-fried) melts into the sauce — add last 5 min.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Mango banana smoothie with coconut yogurt (pre-bed)'}
+ },
+ // Day 1 - Mar 20
+ {
+ breakfast:{name:'Banana Oat Smoothie Bowl',desc:'Thick Vitamix blend topped with granola, blueberries, chia seeds',
+ ingredients:['2 frozen bananas','1/4 cup rolled oats','1 cup oat milk','1 tbsp chia seeds','Granola, blueberries, hemp seeds for topping'],
+ steps:['Blend bananas, oats, oat milk until very thick.','Pour into bowl.','Top with granola, blueberries, chia, hemp seeds.'],emily:'Same as yours — toddler-perfect already!'},
+ lunch:{name:'Leftover Lentil Curry (from last night)',desc:'Easy reheat — already made! Frees up your afternoon.',
+ ingredients:['Leftover Thai Red Lentil Curry','Basmati rice (fresh or reheated)','Optional: squeeze of lemon'],
+ steps:['Reheat curry on stovetop over low, add a splash of water if too thick.','Serve over rice.','Taste and adjust seasoning.'],emily:'Reheat her plain coconut milk lentil portion gently and serve over rice with peas.'},
+ dinner:{name:'Black Bean Tacos',desc:'Corn tortillas with seasoned black beans, avocado, salsa — totally different from the curry lunch',
+ ingredients:['1 can black beans (15oz)','Corn tortillas (6-8)','1 avocado','Mild salsa','Lime juice','Cumin, garlic powder','Baby spinach or shredded lettuce'],
+ steps:['Warm beans with cumin, garlic powder, pinch of salt.','Warm tortillas in cast iron — 30 sec each side.','Slice avocado.','Assemble: beans, avocado, salsa, squeeze of lime.'],emily:'Give her beans and avocado in a soft tortilla cut into small pieces. Skip the salsa.',tip:'Add hot sauce to yours after plating. Black beans are a great iron source — pairs well with tonight lime/vitamin C.'},
+ snack1:{name:'Banana + nut butter'},
+ snack2:{name:'Dark chocolate + walnuts'}
+ },
+ // Day 2 - Mar 21
+ {
+ breakfast:{name:'Tofu Scramble Breakfast Bowl',desc:'Silky scrambled tofu with spinach and toast',
+ ingredients:['1 block firm tofu, pressed','2 cups baby spinach','1/4 tsp turmeric','1/4 tsp garlic powder','2 tbsp nutritional yeast','Salt & pepper','Sourdough toast'],
+ steps:['Crumble tofu into cast iron over medium heat.','Season with turmeric, garlic, nooch, salt.','Add spinach and cook 2 min.','Serve with toast.'],emily:'Same as yours — mild and toddler-friendly already!'},
+ lunch:{name:'Chickpea Avocado Wrap',desc:'Mashed chickpeas and avocado in a flour tortilla',
+ ingredients:['1 can chickpeas (15oz)','1 avocado','Flour tortillas','Lemon juice','Baby spinach','Salt, garlic powder'],
+ steps:['Mash chickpeas and avocado with lemon and seasoning.','Lay on tortilla with spinach.','Roll and slice in half.'],emily:'Same filling works great. Cut into small pieces for her.'},
+ dinner:{name:'Black Bean Burrito Bowl',desc:'Cilantro-lime rice, black beans, avocado, corn, salsa — easy Saturday dinner',
+ ingredients:['1 cup basmati rice','1 can black beans (15oz)','1 can corn (15oz)','1 avocado','Mild salsa','Lime juice','Cumin, garlic powder','Cilantro optional'],
+ steps:['Cook rice, fluff with lime juice and a pinch of cumin.','Warm beans with garlic powder and cumin.','Warm corn.','Assemble bowls: rice, beans, corn, sliced avocado, salsa.'],emily:'Skip the salsa. Give her rice, beans, corn and avocado in a bowl — great self-feeding meal.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Rice cakes + blueberries'}
+ },
+ // Day 3 - Mar 22
+ {
+ breakfast:{name:'Fluffy Vegan Pancakes',desc:'Stack of golden pancakes with maple syrup and fresh fruit',
+ ingredients:['1.5 cups flour','2 tsp baking powder','1 tbsp flaxseed + 3 tbsp water','1 cup oat milk','2 tbsp maple syrup','Coconut oil for pan','Strawberries, sliced bananas'],
+ steps:['Mix flax egg, let sit 5 min.','Whisk dry ingredients. Add wet, mix until just combined.','Cook on oiled cast iron medium heat, flip when bubbles form.','Serve with fruit and maple syrup.'],emily:'Perfect as-is! Let her dip in maple syrup and fruit.'},
+ lunch:{name:'Lentil Soup with Crusty Bread',desc:'Simple hearty lentil soup — Instant Pot friendly',
+ ingredients:['1 cup red lentils','1 can diced tomatoes (14.5oz)','Veggie broth 3 cups','Garlic, onion','Cumin, turmeric','Crusty bread'],
+ steps:['Instant Pot: add everything. Cook high pressure 12 min.','Stovetop: simmer 25 min.','Taste, season. Serve with bread.'],emily:'Hold any tomato. Blend her portion smooth. Serve with soft bread torn into pieces.'},
+ dinner:{name:'Pasta Primavera with White Beans',desc:'Light olive oil pasta with spinach, white beans, lemon — quick Sunday dinner',
+ ingredients:['2 cups pasta','1 can white beans (15oz)','2 cups baby spinach','Cherry tomatoes','Garlic (1 tsp minced)','Olive oil','Nutritional yeast','Basil','Lemon juice'],
+ steps:['Cook pasta, reserve 1/2 cup pasta water.','Sauté garlic in olive oil, add tomatoes until bursting.','Add spinach and beans. Toss with pasta and pasta water.','Finish with lemon juice and nooch.'],emily:'Leave cherry tomatoes out of her portion. Toss her pasta with olive oil, spinach, white beans and nooch.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Dark chocolate + walnuts'}
+ },
+ // Day 4 - Mar 23 (Sunday - weigh in)
+ {
+ breakfast:{name:'Big Sunday Smoothie',desc:'Thick mango-banana Vitamix smoothie with chia and hemp',
+ ingredients:['1 mango, frozen or fresh','2 bananas','1 cup oat milk','1 tbsp chia seeds','1 tbsp hemp seeds','1 tsp flaxseed'],
+ steps:['Blend everything until smooth.','Pour and top with extra hemp seeds.','Optional: add a handful of spinach.'],emily:'Same smoothie works great for her in a small cup or pouch.'},
+ lunch:{name:'Avocado Pasta Salad',desc:'Cold pasta tossed with avocado, cherry tomatoes, lemon',
+ ingredients:['2 cups pasta, cooked and cooled','1 avocado','Cherry tomatoes','Baby spinach','Lemon juice, olive oil','Salt, pepper','Basil'],
+ steps:['Toss cooled pasta with olive oil and lemon.','Fold in avocado chunks, tomatoes, spinach.','Season and top with basil.'],emily:'Leave out cherry tomatoes from her portion. Toss her pasta with avocado and olive oil only.'},
+ dinner:{name:'Creamy Coconut Tofu Curry',desc:'Photogenic golden tofu in rich coconut curry sauce over rice',
+ ingredients:['2 blocks firm tofu, pressed and cubed','1 can coconut milk (13.5oz full fat)','1 can diced tomatoes (14.5oz)','Garlic (1 tsp minced), ginger','Mild curry powder, turmeric','Basmati rice','Baby spinach'],
+ steps:['Air fry tofu at 400F 15 min until golden.','Sauté garlic & ginger, add spices.','Add tomatoes and coconut milk, simmer 10 min.','Add tofu and spinach, simmer 3 min. Serve over rice.'],emily:'Make coconut milk sauce first, scoop Emily portion BEFORE adding tomatoes. Give her tofu and rice with just the coconut sauce.'},
+ snack1:{name:'Banana + nut butter'},
+ snack2:{name:'Apple slices + rice cakes'}
+ },
+ // Day 5 - Mar 24
+ {
+ breakfast:{name:'Oatmeal with Berries & Nut Butter',desc:'Creamy oatmeal bowl with warm berries and a swirl of almond butter',
+ ingredients:['1 cup rolled oats','2 cups oat milk','1 tbsp nut butter','Handful of berries','1 tbsp maple syrup','Chia seeds'],
+ steps:['Simmer oats in oat milk until creamy, about 5 min.','Top with berries, nut butter, maple syrup, chia.'],emily:'Perfect for her too! Just make sure nut butter is smooth, not chunky.'},
+ lunch:{name:'Chickpea Tomato Stew',desc:'Quick Instant Pot or stovetop chickpea stew with crusty bread',
+ ingredients:['2 cans chickpeas (15oz each)','1 can crushed tomatoes (28oz)','Garlic (1 tsp minced), mild spices','Veggie broth 1/2 cup','Baby spinach','Olive oil','Crusty bread'],
+ steps:['Sauté garlic in oil.','Add tomatoes, broth, chickpeas. Simmer 15 min.','Stir in spinach. Serve with crusty bread.'],emily:'Scoop out Emily chickpeas BEFORE adding tomatoes. Serve with olive oil and soft bread.'},
+ dinner:{name:'Pesto Orzo with Air-Fried Eggplant',desc:'Creamy orzo with vegan pesto and crispy air-fried eggplant. Add bread on the side.',
+ ingredients:['1.5 cups orzo','1 medium eggplant, cubed','3 tbsp vegan pesto','Olive oil','Salt, pepper','Crusty bread','Optional: white beans or chickpeas for protein','Nutritional yeast'],
+ steps:['Cube eggplant, toss with olive oil and salt. Air fry at 400F for 12-15 min until golden.','Cook orzo per package. Reserve 1/4 cup pasta water.','Toss orzo with pesto and splash of pasta water.','Top with eggplant and nooch. Serve with bread.'],emily:'Plain orzo with olive oil and nooch — skip the pesto (too garlicky). Soft eggplant pieces are great for self-feeding.',tip:'Low protein meal — stir in a can of white beans or chickpeas to boost. Worth it.'},
+ snack1:{name:'Pear slices + nut butter'},
+ snack2:{name:'Walnuts + raisins'}
+ },
+ // Day 6 - Mar 25
+ {
+ breakfast:{name:'Avocado Toast + Smoothie',desc:'Classic avocado toast with a side mango smoothie',
+ ingredients:['2 slices sourdough','1 avocado','Lemon, salt, hemp seeds','1 mango','1 banana','1/2 cup oat milk'],
+ steps:['Toast bread. Mash avocado with lemon and salt.','Blend smoothie ingredients.','Assemble toast with hemp seeds, serve with smoothie.'],emily:'Give her the smoothie and avocado on soft toast cut into fingers.'},
+ lunch:{name:'Lemony White Bean Orzo Skillet',desc:'A cozy non-soup lunch with white beans, tender orzo, spinach, and lemon.',
+ ingredients:['1 can white beans (15oz), drained','3/4 cup dry orzo','2 cups baby spinach','1 tbsp olive oil','1 tsp minced garlic','1 1/2 cups veggie broth or water','1/2 lemon','Nutritional yeast'],
+ steps:['Sauté garlic in olive oil 1 min.','Add orzo and broth, simmer 8-10 min until tender.','Stir in white beans and spinach until warmed through.','Finish with lemon and a sprinkle of nutritional yeast.'],emily:'Give her plain orzo with white beans, olive oil, and a little spinach if she tolerates it.'},
+ dinner:{name:'Tofu Tikka Masala Style',desc:'Creamy tomato-coconut sauce with crispy air-fryer tofu',
+ ingredients:['2 blocks firm tofu','1 can crushed tomatoes (28oz)','1 can coconut milk (13.5oz full fat)','Garlic (1 tsp minced), ginger','Mild tikka spice blend or garam masala + cumin','Basmati rice','Flatbread or flour tortillas (vegan naan hard to find)'],
+ steps:['Air fry cubed tofu 15 min at 400F.','Sauté aromatics, add spices, add tomatoes + coconut milk.','Simmer sauce 10 min. Add tofu. Serve with rice and naan.'],emily:'Hold the crushed tomatoes for her. Serve tofu in just coconut milk sauce with rice and torn naan.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Rice cakes + blueberries'}
+ },
+ // Day 7 - Mar 26
+ {
+ breakfast:{name:'Chia Pudding Parfait',desc:'Layers of chia pudding, granola, and fresh berries',
+ ingredients:['1/4 cup chia seeds','1.5 cups oat milk','1 tbsp maple syrup','Granola','Strawberries, blueberries'],
+ steps:['Night before: mix chia + oat milk + maple. Refrigerate.','Morning: layer pudding, granola, berries in a glass.'],emily:'Perfect for her! Use a small jar and let her eat with a spoon.'},
+ lunch:{name:'Pasta with Marinara & Chickpeas',desc:'Simple weekday pasta — pantry staple meal',
+ ingredients:['2 cups pasta','1 can chickpeas (15oz)','1 can crushed tomatoes (28oz)','Garlic (or 1 tsp minced)','Olive oil','Basil, nooch'],
+ steps:['Cook pasta.','Sauté garlic, add tomatoes, simmer 8 min. Add chickpeas.','Toss with pasta. Top with basil and nooch.'],emily:'Hold the marinara for her portion. Toss with olive oil, chickpeas and nooch instead.'},
+ dinner:{name:'Indian Dal with Flatbread',desc:'Comforting red lentil dal — moved later in the week so it does not clash with the curry',
+ ingredients:['1 cup red lentils','1 can diced tomatoes (14.5oz)','1 can coconut milk (13.5oz full fat)','Garlic (1 tsp minced)','Ginger','Mild garam masala, cumin, coriander','Flatbread or flour tortillas'],
+ steps:['Sauté garlic & ginger.','Add spices, toast 30 sec.','Scoop out Emily portion now — before tomatoes.','Add lentils, tomatoes, coconut milk, 1 cup water.','Simmer 20 min. Serve with warm flatbread.'],emily:'Scoop out Emily dal BEFORE adding tomatoes. Serve over rice with torn flatbread pieces.'},
+ snack1:{name:'Banana + nut butter'},
+ snack2:{name:'Yogurt + granola (yours) / Rice cakes (Emily)'}
+ },
+ // Day 8 - Mar 27
+ {
+ breakfast:{name:'Strawberry Banana Smoothie',desc:'Classic thick pink smoothie with hemp seeds',
+ ingredients:['2 cups frozen strawberries','2 bananas','1 cup oat milk','1 tbsp hemp seeds','1 tbsp chia seeds'],
+ steps:['Blend all ingredients until smooth.','Pour and top with extra hemp seeds.'],emily:'Perfect for her — same smoothie in a small cup!'},
+ lunch:{name:'Pineapple Fried Rice',desc:'Tropical sweet-savory fried rice — fast and fun weekday lunch',
+ ingredients:['2 cups cooked rice (day-old works best)','1 cup pineapple chunks','Frozen peas','Soy sauce 3 tbsp','Garlic (1 tsp minced), ginger','Sesame oil dash (optional)'],
+ steps:['Heat cast iron very high.','Stir fry garlic & ginger 1 min.','Add rice, break up and fry 2 min.','Add pineapple, peas, soy sauce. Toss until hot and slightly crispy.'],emily:'Great toddler meal! Skip extra soy sauce. Let her self-feed the rice.'},
+ dinner:{name:'Mediterranean Falafel Bowl',desc:'Friday dinner bowl with falafel, cucumber, tomatoes, hummus, and a lemony drizzle. Keep the base mild and add heat only to your bowl.',
+ ingredients:['Frozen falafel (8-10 pieces)','1 cup dry rice or couscous','1/2 cucumber, chopped','1 cup cherry tomatoes, halved','1/4 red onion, thinly sliced','Romaine hearts or little gems','1/2 cup hummus','2 tbsp plain vegan yogurt or tahini','1 lemon','Pita, optional'],
+ steps:['Cook rice or couscous.','Bake or air fry falafel until hot and crisp, about 10-12 min.','Stir together hummus/yogurt or tahini with lemon for a quick drizzle.','Assemble bowls with greens, grain, falafel, cucumber, tomatoes, onion, and sauce.'],emily:'Offer pita, hummus, cucumber, and a little grain separately. Skip onion and any spicy toppings.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Dark chocolate + walnuts'}
+ },
+ // Day 9 - Mar 28
+ {
+ breakfast:{name:'Peanut Butter Banana Oatmeal',desc:'Warming oatmeal with sliced bananas and nut butter swirl',
+ ingredients:['1 cup rolled oats','2 cups oat milk','1 banana, sliced','2 tbsp nut butter','1 tbsp maple syrup','Pinch salt'],
+ steps:['Cook oats in oat milk until creamy.','Top with banana, nut butter, maple syrup.'],emily:'Same bowl works great. Use smooth nut butter and slice bananas small.'},
+ lunch:{name:'Black Bean Quesadillas',desc:'Crispy flour tortilla quesadillas with black beans and avocado',
+ ingredients:['Flour tortillas','1 can black beans (15oz)','1 avocado','Mild salsa','Vegan cheese (optional)'],
+ steps:['Mash beans lightly. Spread on half a tortilla.','Fold and cook in cast iron 2-3 min per side until golden.','Slice and serve with avocado and salsa.'],emily:'Perfect for her! Cut into small triangles — easy finger food.'},
+ dinner:{name:'Mushroom & Broccoli Stir Fry over Rice',desc:'Quick savory stir fry with soy-ginger sauce',
+ ingredients:['Mushrooms, sliced','Broccoli florets','Basmati rice','3 tbsp soy sauce','1 tbsp maple syrup','Garlic (1 tsp minced), ginger','Sesame seeds'],
+ steps:['Cook rice.','Stir fry garlic & ginger in cast iron over high heat.','Add mushrooms and broccoli, cook 5 min.','Add sauce, toss. Serve over rice with sesame seeds.'],emily:'Skip the soy sauce on her portion. Give her plain steamed broccoli, mushrooms and rice with a little butter.'},
+ snack1:{name:'Banana + nut butter'},
+ snack2:{name:'Blueberries + dark chocolate'}
+ },
+ // Day 10 - Mar 29
+ {
+ breakfast:{name:'Mango Green Smoothie Bowl',desc:'Tropical green smoothie base topped with granola and kiwi',
+ ingredients:['1 mango','1 banana','1 cup baby spinach','1 cup oat milk','Granola, kiwi slices, hemp seeds for topping'],
+ steps:['Blend mango, banana, spinach, oat milk thick.','Pour into bowl. Top with granola, kiwi, hemp seeds.'],emily:'Same bowl works great for her with a spoon!'},
+ lunch:{name:'Italian White Bean Soup',desc:'Classic northern Italian-style bean soup with pasta',
+ ingredients:['2 cans white beans (15oz each)','1 can crushed tomatoes (28oz)','Orzo or small pasta','Garlic (or 1 tsp minced)','Italian herbs: basil, oregano, rosemary','Veggie broth 3 cups','Baby spinach','Olive oil'],
+ steps:['Sauté garlic in olive oil.','Add tomatoes, broth, herbs. Simmer 5 min.','Add pasta and beans. Cook 10 min more.','Stir in spinach.'],emily:'Scoop out Emily beans and broth BEFORE adding tomatoes. Add pasta and butter for her.'},
+ dinner:{name:'Cauliflower Tikka Bowl',desc:'Roasted cauliflower in coconut-tomato tikka sauce with rice',
+ ingredients:['1 head cauliflower, florets','1 can coconut milk (13.5oz full fat)','1 can diced tomatoes (14.5oz)','Garlic (1 tsp minced), ginger','Garam masala, cumin, mild paprika','Basmati rice'],
+ steps:['Roast cauliflower at 425F 20 min until golden.','Make sauce: sauté aromatics, add spices, tomatoes, coconut milk.','Simmer 10 min. Add cauliflower. Serve over rice.'],emily:'Plate Emily roasted cauliflower over plain rice with butter and peas BEFORE adding the tomato-coconut sauce.'},
+ snack1:{name:'Strawberries + nut butter'},
+ snack2:{name:'Banana + dark chocolate'}
+ },
+ // Day 11 - Mar 30 (Sunday - weigh in)
+ {
+ breakfast:{name:'Fluffy Weekend Pancakes',desc:'Golden stacks with blueberries and maple syrup — make extra!',
+ ingredients:['1.5 cups flour','2 tsp baking powder','1 tbsp flaxseed + 3 tbsp water (flax egg)','1 cup oat milk','2 tbsp maple syrup','Coconut oil','Blueberries, sliced banana'],
+ steps:['Make flax egg, rest 5 min.','Combine dry ingredients, add wet ingredients.','Cook on oiled cast iron, flip when bubbles form.','Serve with fruit and syrup.'],emily:'Same pancakes — perfect for her! Let her pick her toppings.'},
+ lunch:{name:'White Bean & Avocado Flatbread',desc:'Flatbread / flour tortillas topped with smashed white beans, avocado, cherry tomatoes and basil',
+ ingredients:['2 pieces vegan naan','1 can white beans (15oz), drained','1 avocado','Cherry tomatoes, halved','Fresh basil','Lemon juice','Olive oil drizzle','Salt, garlic powder'],
+ steps:['Warm naan in cast iron until lightly crisped.','Smash white beans with lemon, garlic powder, salt. Spread on naan.','Top with sliced avocado, cherry tomatoes, basil.','Drizzle with olive oil and serve immediately.'],emily:'Perfect for her already. Cut the naan into strips for easy holding.'},
+ dinner:{name:'Risotto with Mushrooms & Peas',desc:'Creamy Arborio risotto — a Sunday labor of love',
+ ingredients:['1.5 cups arborio rice','Mushrooms, sliced','Frozen peas','4 cups veggie broth (warm)','1 shallot or onion','White wine or extra broth','Nutritional yeast','Olive oil','Balsamic glaze drizzle'],
+ steps:['Sauté shallot. Add rice, toast 2 min.','Add broth one ladle at a time, stirring constantly.','After 18-20 min and rice is al dente, add mushrooms, peas, nooch.','Plate and drizzle with balsamic glaze.'],emily:'Same risotto works great — naturally mild and creamy. She will love the peas.'},
+ snack1:{name:'Kiwi + apple slices'},
+ snack2:{name:'Yogurt + granola (yours) / Rice cakes (Emily)'}
+ },
+ // Day 12 - Mar 31
+ {
+ breakfast:{name:'Tofu Scramble & Avocado Toast',desc:'Protein-packed scramble alongside avocado toast — ultimate combo',
+ ingredients:['1 block firm tofu','Baby spinach','Turmeric, nooch, garlic powder','Sourdough toast','1 avocado','Hemp seeds, lemon'],
+ steps:['Scramble tofu in cast iron with spices and spinach.','Toast bread.','Mash avocado on toast with lemon and hemp seeds.','Plate together — the original vegan big breakfast.'],emily:'Same plate works for her. Cut toast into small fingers.'},
+ lunch:{name:'Carrot Ginger Soup',desc:'Silky blended carrot soup with a Vitamix finish',
+ ingredients:['6 carrots, peeled and chopped','1 can coconut milk (13.5oz full fat)','2 cups veggie broth','Garlic, fresh ginger','Cumin, mild curry','Crusty bread'],
+ steps:['Roast carrots at 400F 20 min.','Simmer with broth, garlic, ginger.','Blend in Vitamix until silky. Add coconut milk.','Serve with crusty bread.'],emily:'Perfect for her — sweet and smooth. Serve with soft bread. Hold extra ginger if strong.'},
+ dinner:{name:'Bell Pepper & Bean Taco Night',desc:'Colorful taco night to close out the month',
+ ingredients:['Bell peppers, sliced','1 can black beans (15oz)','Corn tortillas','Avocado','Mild salsa','Cumin, garlic','Lime juice'],
+ steps:['Sauté bell peppers until softened.','Warm beans with cumin and garlic.','Warm tortillas in cast iron.','Assemble tacos with peppers, beans, avocado, salsa, lime.'],emily:'Skip the salsa. Give her peppers, beans and avocado in a soft tortilla cut into pieces.'},
+ snack1:{name:'Apple slices + nut butter'},
+ snack2:{name:'Dark chocolate + walnuts'}
+ }
+];
+
+var SCHEDULE_ITEMS = [
+ {time:'7:15am',label:'DEVA B12 sublingual (empty stomach)',key:'b12'},
+ {time:'7:30am',label:'Multi + Omega-3 + D3+K2 + Choline (with breakfast)',key:'morning_supps'},
+ {time:'7:30am',label:'Toddler vitamins: iron drops + multi (Mon/Wed/Sat)',key:'toddler_vitamins',daysOfWeek:[0,2,5]},
+ {time:'7:30am',label:'Toddler B12: 10 drops (Thursdays)',key:'toddler_b12',daysOfWeek:[3]},
+ {time:'7:30am',label:'Black coffee (1 of 2)',key:'coffee1'},
+ {time:'7:30am',label:'Breakfast ',key:'breakfast'},
+ {time:'8:30am',label:'Black coffee (2 of 2)',key:'coffee2'},
+ {time:'7:15am',label:'Hydroflask AM (start)',key:'hydro_am'},
+ {time:'12:00pm',label:'Lunch ',key:'lunch'},
+ {time:'12:00pm',label:'Hydroflask AM complete ',key:'hydro_am_done'},
+ {time:'2:00pm',label:'Walk 20 min ',key:'walk'},
+ {time:'5:00pm',label:'Dinner ',key:'dinner'},
+ {time:'5:00pm',label:'Zoloft 100mg + stool softener (with dinner)',key:'zoloft'},
+ {time:'5:30pm',label:'Peppermint tea 🫖',key:'pep_tea'},
+ {time:'6:00pm',label:'Hydroflask PM (start)',key:'hydro_pm'},
+ {time:'8:00pm',label:'Toddler to bed ',key:'toddler_bed'},
+ {time:'8:30pm',label:'Hydroflask PM complete ',key:'hydro_pm_done'},
+ {time:'9:00pm',label:'Iron 65mg + OJ on empty stomach ',key:'iron'},
+ {time:'10:00pm',label:'Magnesium Citrate 250mg ',key:'magnesium'},
+];
+
+var HABITS = [
+ {key:'wake_ontime',label:'Up by 7:30am'},
+ {key:'big_bfast',label:'Big breakfast'},
+ {key:'hydration',label:'72oz water + tea'},
+ {key:'walk20',label:'Walk 20min'},
+ {key:'alcohol_free',label:'Alcohol-free'},
+ {key:'sweet_treat',label:'Skipped dessert'},
+ {key:'iron_oj',label:'Iron + OJ 9pm'},
+ {key:'bed_ontime',label:'Bed by 10:30pm'}
+];
+
+var SCHEDULE_TO_HABIT = {
+ 'iron':'iron_oj',
+ 'hydro_am_done':'hydration',
+ 'pep_tea':'hydration',
+ 'hydro_pm_done':'hydration',
+ 'walk':'walk20'
+};
+
+var W1_GROCERY = {
+ 'Produce':[
+ {name:'Avocados',qty:'6–8'},
+ {name:'Bananas',qty:'2 bunches'},
+ {name:'Lemons',qty:'4'},
+ {name:'Limes',qty:'4'},
+ {name:'Cherry tomatoes',qty:'1 pint'},
+ {name:'Baby spinach',qty:'2 bags'},
+ {name:'Garlic (or 1 tsp minced)',qty:'2 heads'},
+ {name:'Apples',qty:'4'},
+ {name:'Mango',qty:'3 (or frozen bag)'},
+ {name:'Watermelon',qty:'1 small'},
+ {name:'Strawberries',qty:'2 pints'},
+ {name:'Blueberries',qty:'2 pints'},
+ {name:'Peaches',qty:'skip - not in season'},
+ {name:'Grapes',qty:'1 bunch'},
+ {name:'Pears',qty:'3'},
+ {name:'Kiwi',qty:'4'},
+ {name:'Fresh basil',qty:'1 bunch'}
+ ],
+ 'Protein':[
+ {name:'Firm tofu',qty:'×3 blocks'},
+ {name:'White beans',qty:'×3 cans'},
+ {name:'Black beans',qty:'×3 cans'},
+ {name:'Chickpeas',qty:'×2 cans'},
+ {name:'Red lentils',qty:'1 bag'},
+ ],
+ 'Dairy-Free & Liquids':[
+ {name:'Oat milk',qty:'×2 cartons'},
+ {name:'Coconut milk (full fat)',qty:'×2 cans'},
+ {name:'Orange juice (large)',qty:'×1'},
+ {name:'Veggie broth',qty:'×2 cartons'}
+ ],
+ 'Grains & Bread':[
+ {name:'Pasta',qty:'×3 boxes'},
+ {name:'Basmati rice',qty:'1 bag'},
+ {name:'Rolled oats',qty:'1 large canister'},
+ {name:'Sourdough bread',qty:'1 loaf'},
+ {name:'Flour tortillas',qty:'1 pack'},
+ {name:'Corn tortillas',qty:'1 pack'},
+ {name:'Flatbread or flour tortillas (vegan naan hard to find)',qty:'1 pack'},
+ {name:'Pita',qty:'1 pack'},
+ {name:'Crusty artisan bread',qty:'1 loaf'},
+ {name:'All-purpose flour',qty:'1 bag'},
+ {name:'Baking powder',qty:'1 can'}
+ ],
+ 'Pantry':[
+ {name:'Crushed tomatoes',qty:'×3 cans'},
+ {name:'Diced tomatoes',qty:'×2 cans'},
+ {name:'Corn',qty:'×1 can'},
+ {name:'Mild salsa',qty:'1 jar'},
+ {name:'Flaxseed',qty:'1 bag'},
+ {name:'Raisins',qty:'1 bag'},
+ {name:'Walnuts',qty:'1 bag'},
+ {name:'Granola',qty:'1 bag (check pantry first)'},
+ {name:'Agave or maple syrup',qty:'1 bottle'},
+ {name:'Coconut oil',qty:'1 jar (check pantry first)'}
+ ],
+ 'Toddler Snacks':[
+ {name:'Rice crackers',qty:'1 bag'},
+ {name:'Graham crackers',qty:'1 box'},
+ 
+ {name:'Puffed rice snacks',qty:'1 bag'},
+ {name:'Coconut yogurt',qty:'4 cups'},
+ {name:'Beech-Nut Veggie & Fruit pouches',qty:'×4'}
+ ],
+ 'Treats & Extras':[
+ {name:'Dark chocolate 70%+',qty:'2 bars'},
+ {name:'Peppermint tea',qty:'1 box'}
+ ]
+};
+
+var W2_GROCERY = {
+ 'Produce (Restock)':[
+ {name:'Avocados',qty:'4'},
+ {name:'Bananas',qty:'1 bunch'},
+ {name:'Baby spinach',qty:'1 bag'},
+ {name:'Garlic (or 1 tsp minced)',qty:'1 head'},
+ {name:'Mushrooms',qty:'1 pack (8oz)'},
+ {name:'Bell peppers',qty:'3–4'},
+ {name:'Broccoli',qty:'1 head'},
+ {name:'Butternut squash',qty:'1 medium'},
+ {name:'Potatoes',qty:'4–5'},
+ {name:'Cauliflower',qty:'1 head'},
+ {name:'Carrots',qty:'1 bag'},
+ {name:'Pineapple',qty:'1 or canned'},
+ {name:'Limes',qty:'3'},
+ {name:'Lemons',qty:'2'},
+ {name:'Fresh ginger',qty:'1 knob'},
+ {name:'Cucumber',qty:'1–2'},
+ {name:'Cherry tomatoes',qty:'1 pint'},
+ {name:'Red onion',qty:'1'},
+ {name:'Romaine hearts or little gems',qty:'1 pack'}
+ ],
+ 'Protein (Restock)':[
+ {name:'Firm tofu',qty:'×2 blocks'},
+ {name:'White beans',qty:'×2 cans'},
+ {name:'Black beans',qty:'×2 cans'},
+ {name:'Red lentils',qty:'1 bag (if low)'},
+ {name:'Frozen falafel',qty:'1 bag'}
+ ],
+ 'Dairy-Free & Liquids (Restock)':[
+ {name:'Oat milk',qty:'×2 cartons'},
+ {name:'Coconut milk (full fat)',qty:'×2 cans'},
+ {name:'Veggie broth',qty:'×2 cartons'}
+ ],
+ 'Grains & Bread (Restock)':[
+ {name:'Arborio rice',qty:'1 bag'},
+ {name:'Pasta',qty:'×2 boxes'},
+ {name:'Sourdough bread',qty:'1 loaf'},
+ {name:'Flour tortillas',qty:'1 pack (if low)'},
+ {name:'Flatbread or flour tortillas (vegan naan hard to find)',qty:'1 pack'}
+ ],
+ 'Pantry (New Additions)':[
+ {name:'Balsamic glaze',qty:'1 bottle'},
+ {name:'Sesame oil',qty:'1 small bottle'},
+ {name:'Smoked paprika',qty:'1 jar'},
+ {name:'Frozen peas',qty:'1 bag'},
+ {name:'Frozen green beans',qty:'1 bag'},
+ {name:'Crushed tomatoes',qty:'×2 cans'},
+ {name:'Diced tomatoes',qty:'×1 can'},
+ {name:'Hummus',qty:'1 tub'},
+ {name:'Plain vegan yogurt or tahini',qty:'1 small container'},
+ {name:'Olives (optional)',qty:'1 jar'}
+ ],
+ 'Toddler Snacks (Restock)':[
+ {name:'Rice crackers',qty:'1 bag'},
+ {name:'Coconut yogurt',qty:'4 cups'},
+ {name:'Beech-Nut Veggie & Fruit pouches',qty:'×3'},
+ {name:'Puffed rice snacks',qty:'1 bag'}
+ ]
+};
+
+var ALREADY_HAVE = [
+ 'Hemp seeds','Chia seeds','Nutritional yeast','Nut butter (Costco)',
+ 'Soy sauce / tamari','Cumin','Garam masala','Turmeric','Coriander',
+ 'Garlic powder','Onion powder','Dried basil','Oregano','Rosemary',
+ 'Chili powder (husband only)','Black pepper','Salt','Olive oil',
+ 'Coconut oil (pantry backup)','Maple syrup (pantry backup)'
+];
+
+// ============================================================
+// STATE
+// ============================================================
+var state = {
+ currentDay: 0,
+ currentGroceryWeek: 1,
+ currentHabitsWeek: 1,
+ darkMode: false
+};
+
+function loadState() {
+ try {
+ var s = localStorage.getItem('wj_state_v2');
+ if (s) {
+ var parsed = JSON.parse(s);
+ state.currentDay = parsed.currentDay || 0;
+ state.currentGroceryWeek = parsed.currentGroceryWeek || 1;
+ state.currentHabitsWeek = parsed.currentHabitsWeek || 1;
+ state.darkMode = parsed.darkMode || false;
+ }
+ } catch(e) {}
+}
+
+function saveState() {
+ try { localStorage.setItem('wj_state_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadData(key, def) {
+ try {
+ var v = localStorage.getItem('wj_' + key);
+ return v ? JSON.parse(v) : def;
+ } catch(e) { return def; }
+}
+
+function saveData(key, val) {
+ try { localStorage.setItem('wj_' + key, JSON.stringify(val)); } catch(e) {}
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function showToast(msg) {
+ var t = document.getElementById('toast');
+ t.textContent = msg;
+ t.classList.add('show');
+ setTimeout(function() { t.classList.remove('show'); }, 2200);
+}
+
+function toggleCollapsible(id) {
+ var el = document.getElementById(id);
+ var ch = document.getElementById(id + '_chevron');
+ if (!el) return;
+ el.classList.toggle('open');
+ if (ch) ch.classList.toggle('open');
+}
+
+function openCollapsible(id) {
+ var el = document.getElementById(id);
+ var ch = document.getElementById(id + '_chevron');
+ if (!el) return;
+ el.classList.add('open');
+ if (ch) ch.classList.add('open');
+}
+
+function getTodayET() {
+ return new Intl.DateTimeFormat('en-CA', {timeZone:'America/New_York'}).format(new Date());
+}
+
+function getTimeStampET() {
+ return new Intl.DateTimeFormat('en-US', {timeZone:'America/New_York', hour:'numeric', minute:'2-digit'}).format(new Date()).toLowerCase();
+}
+
+function getWeekDaysForCurrentGrocery() {
+ return state.currentGroceryWeek === 1 ? DAYS.slice(0,7) : DAYS.slice(7,13);
+}
+
+function getMealExtras(meal, mealKey, dayIndex) {
+ var extras = {prep:[], backup:[], glenn:''};
+ var name = (meal && meal.name ? meal.name : '').toLowerCase();
+ var desc = (meal && meal.desc ? meal.desc : '').toLowerCase();
+ var saladish = name.indexOf('salad') >= 0 || desc.indexOf('salad') >= 0 || name.indexOf('caesar') >= 0;
+ if (mealKey === 'breakfast') {
+   extras.prep = ['Set out blender cup or saucepan tonight.', 'Wash fruit or portion oats so breakfast feels automatic.'];
+   extras.backup = ['Smoothie with whatever fruit + oat milk you have.', 'Oatmeal with nut butter.', 'Toast or rice cakes with nut butter if you need ultra-easy.'];
+ } else if (mealKey === 'lunch') {
+   extras.prep = ['Chop one veggie or wash greens tonight.', 'Cook one base like pasta, rice, or couscous ahead if helpful.'];
+   extras.backup = ['Pasta + olive oil + white beans.', 'Rice or couscous + chickpeas + lemon.', 'Smoothie and a simple snack plate if cooking feels like too much.'];
+ } else {
+   extras.prep = ['Chop garlic/veg or press tofu the night before.', 'Cook rice or couscous ahead when you know dinner energy will be low.'];
+   extras.backup = ['Pasta + olive oil + beans.', 'Rice + chickpeas + olive oil.', 'Snack plate dinner or smoothie night totally counts.'];
+ }
+ if (saladish) {
+   extras.prep = ['Make the dressing tonight.', 'Wash lettuce and chop crunchy toppings ahead.'];
+   extras.backup = ['Warm couscous or rice bowl with the same toppings, no greens.', 'Chickpeas + olive oil + lemon bowl.', 'Pita + hummus if you have it.'];
+   extras.glenn = 'Serve the same toppings as a wrap, pita plate, or grain bowl instead of over greens.';
+ }
+ if (name.indexOf('falafel') >= 0) {
+   extras.prep = ['Chop cucumber, tomatoes, and onion ahead.', 'Stir together tahini-yogurt or lemon dressing tonight.'];
+   extras.backup = ['Warm pita + hummus plate.', 'Rice bowl with chickpeas, cucumber, and lemon.', 'Couscous bowl with olives and tomatoes if falafel sounds like too much.'];
+ }
+ if (name.indexOf('pasta') >= 0 || name.indexOf('orzo') >= 0) {
+   extras.backup = ['Pasta + olive oil + white beans.', 'Pasta + nutritional yeast + frozen peas.', 'Use any leftover pasta and call it done.'];
+ }
+ if (name.indexOf('tofu') >= 0 || name.indexOf('bowl') >= 0 || name.indexOf('rice') >= 0) {
+   extras.backup = ['Rice + chickpeas + olive oil.', 'Rice + frozen veggies + nooch.', 'Smoothie + toast on a low-effort night.'];
+ }
+ return extras;
+}
+
+function getDayDate(i) {
+ return DAYS[i] ? DAYS[i].date : '';
+}
+
+function isSunday(i) {
+ var d = new Date(getDayDate(i) + 'T12:00:00');
+ return d.getDay() === 0;
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(name) {
+ document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+ document.querySelectorAll('.nav-btn').forEach(function(el) { el.classList.remove('active'); });
+ document.getElementById('tab-' + name).classList.add('active');
+ document.querySelector('.nav-btn[data-tab="' + name + '"]').classList.add('active');
+ document.getElementById('scroll').scrollTop = 0;
+ if (name === 'meals') renderMeals();
+ if (name === 'habits') renderHabits();
+ if (name === 'walk') renderWalk();
+ if (name === 'grocery') renderGrocery();
+ if (name === 'analytics') renderAnalytics();
+}
+
+// ============================================================
+// MEALS TAB
+// ============================================================
+function renderMeals() {
+ var i = state.currentDay;
+ var dayData = MEALS[i];
+ var dateKey = getDayDate(i);
+ var checklist = loadData('sched_' + dateKey, {});
+ var checkin = loadData('checkin_' + dateKey, {energy:0,bloat:''});
+ var bloatTs = loadData('bloat_ts_' + dateKey, {time:'',val:''});
+ var weighin = loadData('weighin', {});
+ var notes = loadData('notes_' + dateKey, {});
+
+ var html = '';
+ html += '<div class="day-nav">';
+ html += '<button class="day-nav-btn" ' + (i === 0 ? 'disabled' : '') + ' onclick="navDay(-1)">‹</button>';
+ html += '<div class="day-nav-center"><div class="day-nav-date">' + DAYS[i].label + '</div>';
+ html += '<div class="day-nav-day">Day ' + (i+1) + ' of 13</div></div>';
+ html += '<button class="day-nav-btn" ' + (i === DAYS.length-1 ? 'disabled' : '') + ' onclick="navDay(1)">›</button>';
+ html += '</div>';
+
+ html += '<div class="card">';
+ html += '<div class="card-header" onclick="toggleCollapsible(\'sched_col\')">';
+ html += '<span class="card-title">Today\'s Schedule</span>';
+ html += '<span class="chevron" id="sched_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="sched_col"><div class="card-body">';
+ var timestamps = loadData('sched_ts_' + dateKey, {});
+ SCHEDULE_ITEMS.forEach(function(item) {
+   if (item.daysOfWeek) {
+     var dow = new Date(dateKey + 'T12:00:00').getDay();
+     var jsToMon = [6,0,1,2,3,4,5];
+     var dayIdx = jsToMon[dow];
+     if (item.daysOfWeek.indexOf(dayIdx) < 0) return;
+   }
+   var done = checklist[item.key] || false;
+   var ts = timestamps[item.key] || '';
+   if (done) {
+     html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;opacity:0.55;padding:3px 0;">';
+     html += '<span class="sched-time" style="font-size:10px;">' + item.time + '</span>';
+     html += '<div class="sched-check done" id="sc_' + item.key + '"></div>';
+     html += '<span class="sched-label done" id="sl_' + item.key + '" style="font-size:11px;">' + item.label + '</span>';
+     html += '</div>';
+   } else {
+     html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;">';
+     html += '<span class="sched-time">' + item.time + '</span>';
+     html += '<div class="sched-check" id="sc_' + item.key + '"></div>';
+     html += '<div style="flex:1;">';
+     html += '<span class="sched-label" id="sl_' + item.key + '">' + item.label + '</span>';
+     html += '<span id="ts_' + item.key + '" style="display:block;font-size:11px;color:#3dab8a;font-weight:600;margin-top:1px;">' + ts + '</span>';
+     html += '</div></div>';
+   }
+ });
+ var schedNote = loadData('sched_note_' + dateKey, '');
+ html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid #e8f0e8">';
+ html += '<div style="font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#3dab8a;margin-bottom:6px;">Schedule Notes</div>';
+ html += '<textarea class="notes-input" rows="3" placeholder="How did today go? Anything to flag..." onchange="saveSchedNote(\'' + dateKey + '\',this.value)">' + schedNote + '</textarea>';
+ html += '</div></div></div></div>';
+
+ ['breakfast','lunch','dinner'].forEach(function(mealKey) {
+   var labels = {breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner'};
+   var meal = dayData[mealKey];
+   var noteVal = notes[mealKey] || '';
+   var colId = 'meal_' + mealKey + '_' + i;
+   var ingChecked = loadData('ing_' + dateKey + '_' + mealKey, {});
+   var stepChecked = loadData('step_' + dateKey + '_' + mealKey, {});
+   var extras = getMealExtras(meal, mealKey, i);
+
+   html += '<div class="card">';
+   html += '<div class="card-header" onclick="toggleCollapsible(\'' + colId + '\')">';
+   html += '<span class="card-title">' + labels[mealKey] + '</span>';
+   html += '<span class="chevron" id="' + colId + '_chevron"></span></div>';
+   html += '<div class="collapsible" id="' + colId + '"><div class="card-body">';
+   html += '<div class="meal-name">' + meal.name + '</div>';
+   html += '<p class="meal-desc">' + meal.desc + '</p>';
+
+   html += '<div class="recipe-section"><div class="recipe-label">Ingredients</div><div class="recipe-list">';
+   (meal.ingredients || []).forEach(function(ing, ii) {
+     var idone = ingChecked[ii] || false;
+     html += '<div class="recipe-item" onclick="toggleIng(\'' + dateKey + '\',\'' + mealKey + '\',' + ii + ')">';
+     html += '<div class="recipe-item-check' + (idone ? ' done' : '') + '" id="ic_' + mealKey + '_' + ii + '"></div>';
+     html += '<span class="recipe-item-text' + (idone ? ' done' : '') + '" id="it_' + mealKey + '_' + ii + '">' + ing + '</span></div>';
+   });
+   html += '</div>';
+
+   html += '<div class="recipe-label" style="margin-top:14px">Steps</div><div class="recipe-steps">';
+   (meal.steps || []).forEach(function(step, si) {
+     var sdone = stepChecked[si] || false;
+     var stepHtml = step.replace(/[0-9]+(?:-[0-9]+)? ?min/gi, function(match) {
+       var num = parseInt(match);
+       var secs = num * 60;
+       return match + '<button class="timer-btn" onclick="event.stopPropagation();startTimer(' + secs + ',\'' + match + '\')">Start</button>';
+     });
+     html += '<div class="recipe-step" onclick="toggleStep(\'' + dateKey + '\',\'' + mealKey + '\',' + si + ')">';
+     html += '<div class="step-num' + (sdone ? ' done' : '') + '" id="sn_' + mealKey + '_' + si + '">' + (si+1) + '</div>';
+     html += '<div class="step-text' + (sdone ? ' done' : '') + '" id="st_' + mealKey + '_' + si + '">' + stepHtml + '</div></div>';
+   });
+   html += '</div></div>';
+
+   if (meal.emily) {
+     html += '<div style="margin-top:10px;padding:10px 12px;background:#daeef8;border-radius:12px;">';
+     html += '<span style="font-size:11px;font-weight:700;color:#5a9ab4;text-transform:uppercase;letter-spacing:0.5px;">For Emily</span>';
+     html += '<div style="font-size:15px;color:#2d3d2d;margin-top:2px;line-height:1.55;">' + meal.emily + '</div></div>';
+   }
+   if (meal.tip) {
+     html += '<div style="margin-top:8px;padding:10px 12px;background:var(--mint-light);border-radius:12px;border-left:3px solid var(--mint);">';
+     html += '<span style="font-size:11px;font-weight:700;color:#3dab8a;text-transform:uppercase;letter-spacing:0.5px;">Chef Tip</span>';
+     html += '<div style="font-size:15px;color:#2d3d2d;margin-top:2px;line-height:1.55;">' + meal.tip + '</div></div>';
+   }
+
+   if (extras.prep && extras.prep.length) {
+     var prepId = colId + '_prep';
+     html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'' + prepId + '\')"><span class="meal-meta-label">Prep ahead</span><span class="chevron" id="' + prepId + '_chevron"></span></div>';
+     html += '<div class="collapsible" id="' + prepId + '"><div class="meal-meta-text"><ul style="padding-left:18px;margin:6px 0 0;">';
+     extras.prep.forEach(function(item){ html += '<li style="margin:4px 0;">' + item + '</li>'; });
+     html += '</ul></div></div></div>';
+   }
+   if (extras.backup && extras.backup.length) {
+     var backupId = colId + '_backup';
+     html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'' + backupId + '\')"><span class="meal-meta-label">Backup option</span><span class="chevron" id="' + backupId + '_chevron"></span></div>';
+     html += '<div class="collapsible" id="' + backupId + '"><div class="meal-meta-text"><ul style="padding-left:18px;margin:6px 0 0;">';
+     extras.backup.forEach(function(item){ html += '<li style="margin:4px 0;">' + item + '</li>'; });
+     html += '</ul></div></div></div>';
+   }
+   if (extras.glenn) {
+     var glennId = colId + '_glenn';
+     html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'' + glennId + '\')"><span class="meal-meta-label">Glenn option</span><span class="chevron" id="' + glennId + '_chevron"></span></div>';
+     html += '<div class="collapsible" id="' + glennId + '"><div class="meal-meta-text">' + extras.glenn + '</div></div></div>';
+   }
+
+   html += '<div class="meal-notes-wrap"><div class="meal-notes-label">Meal notes</div><textarea class="notes-input" rows="4" placeholder="Add notes, swaps, extras..." onchange="saveMealNote(\'' + dateKey + '\',\'' + mealKey + '\',this.value)">' + noteVal + '</textarea></div>';
+   html += '</div></div></div>';
+
+   if (mealKey === 'lunch') {
+     var snackChecked = loadData('snack_check_' + dateKey, {});
+     var snackNotes = loadData('snack_notes_' + dateKey, '');
+     html += '<div class="card" style="margin-bottom:12px;">';
+     html += '<div class="card-header" onclick="toggleCollapsible(\'snacks_col_' + dateKey + '\')"><span class="card-title">Snacks</span><span class="chevron" id="snacks_col_' + dateKey + '_chevron"></span></div>';
+     html += '<div class="collapsible" id="snacks_col_' + dateKey + '"><div class="card-body">';
+     ['Morning','Afternoon'].forEach(function(lbl, idx){
+       var key = 'snack_' + idx;
+       var done = snackChecked[key] || false;
+       var name = idx === 0 ? dayData.snack1.name : dayData.snack2.name;
+       html += '<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--sage-light);cursor:pointer;" onclick="toggleSnackCheck(\'' + dateKey + '\',\'' + key + '\')">';
+       html += '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid ' + (done ? '#3dab8a' : '#c4d9c4') + ';background:' + (done ? '#3dab8a' : 'none') + ';display:flex;align-items:center;justify-content:center;" id="sc_' + key + '">' + (done ? '<span style="color:white;font-size:11px;font-weight:700;">&#10003;</span>' : '') + '</div>';
+       html += '<div><div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;">' + lbl + '</div><div style="font-size:15px;color:var(--text);font-weight:500;' + (done ? 'text-decoration:line-through;opacity:0.5;' : '') + '" id="st_' + key + '">' + name + '</div></div></div>';
+     });
+     html += '<textarea class="notes-input" rows="3" placeholder="What did you actually have? Emily reactions..." onchange="saveSnackNotes(\'' + dateKey + '\',this.value)">' + snackNotes + '</textarea>';
+     html += '</div></div></div>';
+   }
+ });
+
+ var sleepData = loadData('sleep_' + dateKey, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
+ html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'checkin_col\')"><span class="card-title">Check-In</span><span class="chevron" id="checkin_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="checkin_col"><div class="card-body">';
+ html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Energy</div><div class="checkin-row">';
+ [1,2,3,4,5].forEach(function(n){ html += '<button class="energy-btn' + (checkin.energy===n ? ' sel':'') + '" onclick="setEnergy(\'' + dateKey + '\',' + n + ')">' + n + '/5</button>'; });
+ html += '</div>';
+ html += '<div style="margin-top:12px;font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Bloating</div><div class="checkin-row">';
+ ['None','Mild','Bad'].forEach(function(v){ html += '<button class="bloat-btn' + (checkin.bloat===v ? ' sel':'') + '" onclick="setBloat(\'' + dateKey + '\',\'' + v + '\')">' + v + '</button>'; });
+ html += '</div>';
+ html += '<div class="divider"></div>';
+ html += '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.wake + '" onchange="saveSleepField(\'' + dateKey + '\',\'wake\',this.value)"></div><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.bed + '" onchange="saveSleepField(\'' + dateKey + '\',\'bed\',this.value)"></div></div>';
+ html += '<div class="divider"></div>';
+ var eatingQ = loadData('eating_q_' + dateKey, '');
+ html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Eating today</div><div class="checkin-row">';
+ ['Light','On Track','Indulgent'].forEach(function(q) {
+   var colors = {Light:'#7ab8d4',OnTrack:'#3dab8a',Indulgent:'#c084fc'};
+   var key = q.replace(' ','');
+   var sel = eatingQ === q;
+   html += '<button onclick="setEatingQ(\'' + dateKey + '\',\'' + q + '\')" style="padding:6px 14px;border-radius:20px;border:2px solid #c4d9c4;background:' + (sel ? (colors[key]||'#3dab8a') : 'none') + ';color:' + (sel ? 'white' : '#7a9478') + ';font-size:12px;font-weight:600;cursor:pointer;">' + q + '</button>';
+ });
+ html += '</div>';
+ if (isSunday(i)) {
+   var wVal = weighin[dateKey] || '';
+   var prevSun = getPrevSundayWeight(i);
+   html += '<div class="divider"></div><div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:6px;">Sunday Weigh-In</div><div class="weigh-input-row">';
+   html += '<input class="weigh-input" type="number" step="0.1" placeholder="lbs" value="' + wVal + '" id="weigh_input_' + dateKey + '"><button class="save-btn" onclick="saveWeighIn(\'' + dateKey + '\')">Save</button></div>';
+   if (prevSun && wVal) {
+     var delta = parseFloat(wVal) - parseFloat(prevSun);
+     var sign = delta >= 0 ? '+' : '';
+     html += '<div style="margin-top:6px;font-size:12px;color:#7a9478;">vs last weigh-in: <span style="font-weight:700;color:' + (delta <= 0 ? '#3dab8a' : '#e06060') + '">' + sign + delta.toFixed(1) + ' lbs</span></div>';
+   }
+ }
+ html += '</div></div></div>';
+
+ html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'emily_col\')"><span class="card-title">Emily</span><span class="chevron" id="emily_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="emily_col"><div class="card-body">';
+ html += '<div style="font-size:12px;font-weight:700;color:#7ab8d4;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Sleep (goal: 8pm bedtime)</div>';
+ html += '<div style="display:flex;flex-direction:column;gap:8px;">';
+ [['emilyWake','Woke up'],['emilyNapStart','Nap start'],['emilyNapEnd','Nap end'],['emilyBed','Bedtime']].forEach(function(cfg){
+   html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">' + cfg[1] + '</label>';
+   html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">';
+   html += '<div class="time-input-wrap" style="max-width:190px;width:100%;"><input type="time" class="time-input" value="' + (sleepData[cfg[0]]||'') + '" id="sleep_' + cfg[0] + '_' + dateKey + '"></div>';
+   html += '<button type="button" class="save-btn" style="padding:10px 14px;white-space:nowrap;" onclick="saveSleepInputValue(\'' + dateKey + '\',\'' + cfg[0] + '\')">Save</button>';
+   html += '<button type="button" onclick="clearSleepField(\'' + dateKey + '\',\'' + cfg[0] + '\')" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Clear</button>';
+   html += '</div></div>';
+ });
+ html += '</div>';
+ var emilyNotes = loadData('emily_notes_' + dateKey, '');
+ html += '<textarea class="notes-input" rows="4" placeholder="How did Emily do today? Sleep, mood, eating, anything notable..." onchange="saveEmilyNotes(\'' + dateKey + '\',this.value)">' + emilyNotes + '</textarea>';
+ html += '</div></div></div>';
+
+ document.getElementById('meals-content').innerHTML = html;
+}
+
+function getPrevSundayWeight(dayIdx) {
+ var weighin = loadData('weighin', {});
+ for (var j = dayIdx - 1; j >= 0; j--) {
+ if (isSunday(j)) {
+ var d = getDayDate(j);
+ if (weighin[d]) return weighin[d];
+ }
+ }
+ return null;
+}
+
+function navDay(dir) {
+ var newI = state.currentDay + dir;
+ if (newI < 0 || newI >= DAYS.length) return;
+ state.currentDay = newI;
+ saveState();
+ renderMeals();
+ document.getElementById('scroll').scrollTop = 0;
+}
+
+function toggleSchedule(dateKey, itemKey) {
+ var checklist = loadData('sched_' + dateKey, {});
+ checklist[itemKey] = !checklist[itemKey];
+ saveData('sched_' + dateKey, checklist);
+ if (SCHEDULE_TO_HABIT[itemKey]) {
+   var habitKey = SCHEDULE_TO_HABIT[itemKey];
+   var habits = loadData('habits', {});
+   if (!habits[dateKey]) habits[dateKey] = {};
+   habits[dateKey][habitKey] = checklist[itemKey];
+   saveData('habits', habits);
+ }
+ var timestamps = loadData('sched_ts_' + dateKey, {});
+ if (checklist[itemKey]) timestamps[itemKey] = getTimeStampET(); else delete timestamps[itemKey];
+ saveData('sched_ts_' + dateKey, timestamps);
+ renderMeals();
+ openCollapsible('sched_col');
+}
+
+function toggleSnackCheck(dateKey, key) {
+  var snackChecked = loadData('snack_check_' + dateKey, {});
+  snackChecked[key] = !snackChecked[key];
+  saveData('snack_check_' + dateKey, snackChecked);
+  var done = snackChecked[key];
+  var circle = document.getElementById('sc_' + key);
+  var text = document.getElementById('st_' + key);
+  if (circle) {
+    circle.style.background = done ? '#3dab8a' : 'none';
+    circle.style.borderColor = done ? '#3dab8a' : '#c4d9c4';
+    circle.innerHTML = done ? '<span style="color:white;font-size:11px;font-weight:700;">&#10003;</span>' : '';
+  }
+  if (text) {
+    text.style.textDecoration = done ? 'line-through' : 'none';
+    text.style.opacity = done ? '0.5' : '1';
+  }
+}
+
+function saveEmilyNotes(dateKey, val) {
+  saveData('emily_notes_' + dateKey, val);
+}
+function saveSleepInputValue(dateKey, field) {
+ var input = document.getElementById('sleep_' + field + '_' + dateKey);
+ if (!input) return;
+ saveSleepField(dateKey, field, input.value);
+}
+
+
+function saveSnackNotes(dateKey, val) {
+  saveData('snack_notes_' + dateKey, val);
+}
+
+function saveYourSnack(dateKey, idx, val) {
+  var snacks = loadData('your_snack_' + dateKey, ['','']);
+  snacks[idx] = val;
+  saveData('your_snack_' + dateKey, snacks);
+}
+
+function saveMealNote(dateKey, mealKey, val) {
+ var notes = loadData('notes_' + dateKey, {});
+ notes[mealKey] = val;
+ saveData('notes_' + dateKey, notes);
+}
+
+function toggleIng(dateKey, mealKey, idx) {
+ var ingChecked = loadData('ing_' + dateKey + '_' + mealKey, {});
+ ingChecked[idx] = !ingChecked[idx];
+ saveData('ing_' + dateKey + '_' + mealKey, ingChecked);
+ var checkEl = document.getElementById('ic_' + mealKey + '_' + idx);
+ var textEl = document.getElementById('it_' + mealKey + '_' + idx);
+ if (checkEl) checkEl.className = 'recipe-item-check' + (ingChecked[idx] ? ' done' : '');
+ if (textEl) textEl.className = 'recipe-item-text' + (ingChecked[idx] ? ' done' : '');
+}
+
+function toggleStep(dateKey, mealKey, idx) {
+ var stepChecked = loadData('step_' + dateKey + '_' + mealKey, {});
+ stepChecked[idx] = !stepChecked[idx];
+ saveData('step_' + dateKey + '_' + mealKey, stepChecked);
+ var numEl = document.getElementById('sn_' + mealKey + '_' + idx);
+ var textEl = document.getElementById('st_' + mealKey + '_' + idx);
+ if (numEl) numEl.className = 'step-num' + (stepChecked[idx] ? ' done' : '');
+ if (textEl) textEl.className = 'step-text' + (stepChecked[idx] ? ' done' : '');
+ // Auto-check Big breakfast habit when any breakfast step is checked
+ if (mealKey === 'breakfast' && stepChecked[idx]) {
+   var habits = loadData('habits', {});
+   if (!habits[dateKey]) habits[dateKey] = {};
+   if (!habits[dateKey]['big_bfast']) {
+     habits[dateKey]['big_bfast'] = true;
+     saveData('habits', habits);
+     showToast('Big breakfast habit checked!');
+   }
+ }
+}
+
+var activeTimer = null;
+
+function saveBonusLog(dateKey, val) {
+  var bonusLog = loadData('bonus_log', {});
+  bonusLog[dateKey] = val;
+  saveData('bonus_log', bonusLog);
+}
+
+function toggleMoveCheck() {
+  var todayKey = getTodayET();
+  var moveChecked = loadData('move_check', {});
+  moveChecked[todayKey] = !moveChecked[todayKey];
+  saveData('move_check', moveChecked);
+  // Auto-check walk goal when move is completed
+  if (moveChecked[todayKey]) autoCheckWalkGoal();
+  renderWalk();
+}
+
+function logWalkMins() {
+  var inp = document.getElementById('walk_mins_input');
+  if (!inp || !inp.value) return;
+  var mins = parseInt(inp.value);
+  if (isNaN(mins) || mins < 1) return;
+  var walkLog = loadData('walk_log', {});
+  var todayKey = getTodayET();
+  walkLog[todayKey] = mins;
+  saveData('walk_log', walkLog);
+  if (mins >= 20) {
+    autoCheckWalkGoal();
+    // Also check the 'walk' schedule item for today
+    var todaySched = loadData('sched_ts_' + getTodayET(), {});
+    todaySched['walk'] = getTimeStampET();
+    saveData('sched_ts_' + getTodayET(), todaySched);
+    var schedChecked = loadData('sched_check_' + getTodayET(), {});
+    schedChecked['walk'] = true;
+    saveData('sched_check_' + getTodayET(), schedChecked);
+    showToast('Walk logged: ' + mins + ' min — goal hit!');
+  } else {
+    showToast('Walk logged: ' + mins + ' min');
+  }
+  renderWalk();
+}
+
+function stopTimer() {
+  if (activeTimer) {
+    clearInterval(activeTimer.interval);
+    if (activeTimer.overlay) activeTimer.overlay.remove();
+    activeTimer = null;
+  }
+}
+
+function saveSchedNote(dateKey, val) {
+ saveData('sched_note_' + dateKey, val);
+}
+
+function clearSleepField(dateKey, field) {
+  var sleepData = loadData('sleep_' + dateKey, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
+  sleepData[field] = '';
+  saveData('sleep_' + dateKey, sleepData);
+  renderMeals();
+}
+
+function saveSleepField(dateKey, field, val) {
+ var sleepData = loadData('sleep_' + dateKey, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
+ sleepData[field] = val;
+ saveData('sleep_' + dateKey, sleepData);
+ // Auto-check wake_ontime habit if wake <= 7:30am
+ if (field === 'wake' && val) {
+   var parts = val.split(':');
+   var wakeMins = parseInt(parts[0])*60 + parseInt(parts[1]);
+   var habits = loadData('habits', {});
+   if (!habits[dateKey]) habits[dateKey] = {};
+   var onTime = wakeMins <= 7*60+30;
+   habits[dateKey]['wake_ontime'] = onTime;
+   saveData('habits', habits);
+   if (onTime) showToast('Up by 7:30am — habit checked!');
+ }
+ // Auto-check toddler_bed schedule item when emilyBed is logged
+ if (field === 'emilyBed' && val) {
+   var tbChecked = loadData('sched_check_' + dateKey, {});
+   tbChecked['toddler_bed'] = true;
+   saveData('sched_check_' + dateKey, tbChecked);
+   var tbTs = loadData('sched_ts_' + dateKey, {});
+   tbTs['toddler_bed'] = val;
+   saveData('sched_ts_' + dateKey, tbTs);
+ }
+ // Auto-check bed_ontime habit if bed <= 10:30pm
+ if (field === 'bed' && val) {
+   var bparts = val.split(':');
+   var bedMins = parseInt(bparts[0])*60 + parseInt(bparts[1]);
+   var habits2 = loadData('habits', {});
+   if (!habits2[dateKey]) habits2[dateKey] = {};
+   var bedOk = bedMins <= 22*60+30;
+   habits2[dateKey]['bed_ontime'] = bedOk;
+   saveData('habits', habits2);
+   if (bedOk) showToast('In bed by 10:30pm — habit checked!');
+ }
+ // Re-render meals to show updated Emily feedback — preserve emily_col open state
+ if (field === 'emilyWake' || field === 'emilyNapStart' || field === 'emilyNapEnd' || field === 'emilyBed') {
+   var emilyColWasOpen = document.getElementById('emily_col') && document.getElementById('emily_col').classList.contains('open');
+   renderMeals();
+   if (emilyColWasOpen) {
+     var ec = document.getElementById('emily_col');
+     var ech = document.getElementById('emily_col_chevron');
+     if (ec) { ec.classList.add('open'); }
+     if (ech) { ech.classList.add('open'); }
+   }
+   return;
+ }
+ // Update sick buttons in-place
+ if (field === 'sick') {
+ ['No','Yes'].forEach(function(v) {
+ var el = document.getElementById('sick_' + v);
+ if (el) { el.style.background = v === val ? '#3dab8a' : 'none'; el.style.color = v === val ? 'white' : '#7a9478'; }
+ });
+ }
+ if (field === 'emilySick') {
+ ['No','Yes'].forEach(function(v) {
+ var el = document.getElementById('emilySick_' + v);
+ if (el) { el.style.background = v === val ? '#7ab8d4' : 'none'; el.style.color = v === val ? 'white' : '#7a9478'; }
+ });
+ }
+}
+
+function setEnergy(dateKey, val) {
+ var ci = loadData('checkin_' + dateKey, {energy:0,bloat:''});
+ ci.energy = (ci.energy === val) ? 0 : val;
+ saveData('checkin_' + dateKey, ci);
+ for (var e = 1; e <= 5; e++) {
+ var el = document.getElementById('eb_' + e);
+ if (el) el.className = 'energy-btn' + (e === ci.energy ? ' sel' : '');
+ }
+}
+
+function setBloat(dateKey, val) {
+ var ci = loadData('checkin_' + dateKey, {energy:0,bloat:''});
+ ci.bloat = (ci.bloat === val) ? '' : val;
+ saveData('checkin_' + dateKey, ci);
+ // Timestamp
+ var bloatTs = {time:'',val:''};
+ if (ci.bloat) {
+   var now = new Date();
+   var hrs = now.getHours(); var mins = now.getMinutes();
+   var ampm = hrs >= 12 ? 'pm' : 'am';
+   hrs = hrs % 12 || 12;
+   bloatTs.time = hrs + ':' + (mins < 10 ? '0' : '') + mins + ampm;
+   bloatTs.val = ci.bloat;
+ }
+ saveData('bloat_ts_' + dateKey, bloatTs);
+ ['None','Mild','Bad'].forEach(function(b) {
+   var el = document.getElementById('bb_' + b);
+   if (el) el.className = 'bloat-btn' + (b === ci.bloat ? ' sel' : '');
+ });
+ var tsEl = document.getElementById('bloat_ts_display');
+ if (tsEl) tsEl.textContent = ci.bloat ? ci.bloat + ' logged at ' + bloatTs.time : '';
+}
+
+function setEatingQ(dateKey, val) {
+  var current = loadData('eating_q_' + dateKey, '');
+  var newVal = (current === val) ? '' : val;
+  saveData('eating_q_' + dateKey, newVal);
+  var colors = {Light:'#7ab8d4',OnTrack:'#3dab8a',Indulgent:'#c084fc'};
+  ['Light','On Track','Indulgent'].forEach(function(q) {
+    var key = q.replace(' ','');
+    var el = document.getElementById('eq_' + key);
+    if (el) {
+      var sel = newVal === q;
+      el.style.background = sel ? (colors[key]||'#3dab8a') : 'none';
+      el.style.color = sel ? 'white' : '#7a9478';
+    }
+  });
+}
+
+function saveWeighIn(dateKey) {
+ var inp = document.getElementById('weigh_input_' + dateKey);
+ if (!inp || !inp.value) return;
+ var weighin = loadData('weighin', {});
+ weighin[dateKey] = parseFloat(inp.value);
+ var weighTs = loadData('weighin_ts', {});
+ weighTs[dateKey] = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+ saveData('weighin', weighin);
+ saveData('weighin_ts', weighTs);
+ showToast('Weigh-in saved!');
+ renderMeals();
+ setTimeout(function() {
+   var cc = document.getElementById('checkin_col');
+   var cch = document.getElementById('checkin_col_chevron');
+   if (cc && cc.classList.contains('open')) { cc.classList.remove('open'); if (cch) cch.classList.remove('open'); }
+ }, 500);
+}
+
+// ============================================================
+// HABITS TAB
+// ============================================================
+function renderHabits() {
+ var weekDays = getWeekDaysForCurrentGrocery();
+ var habits = loadData('habits', {});
+ var html = '';
+ html += '<div class="card"><div class="card-header"><span class="card-title">Habit Tracker</span><span style="font-size:12px;color:var(--text-muted);font-weight:600;">Current grocery week</span></div>';
+ html += '<div class="card-body" style="padding-top:0">';
+ html += '<div class="habit-grid"><table class="habit-table"><colgroup><col class="habit-label-col">';
+ for (var ci = 0; ci < weekDays.length; ci++) html += '<col class="habit-day-col">';
+ html += '</colgroup><thead><tr><th class="habit-name-cell">Habit</th>';
+ var todayStr = getTodayET();
+ weekDays.forEach(function(d) {
+   var dd = new Date(d.date + 'T12:00:00');
+   var isToday = d.date === todayStr;
+   var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+   html += '<th' + (isToday ? ' style="background:rgba(61,171,138,0.12);border-radius:10px 10px 0 0;color:#3dab8a;font-weight:800;"' : '') + '>' + days[dd.getDay()] + '<br><span style="font-weight:400;color:' + (isToday ? '#3dab8a' : '#aac4aa') + '">' + dd.getDate() + '</span></th>';
+ });
+ html += '</tr></thead><tbody>';
+ HABITS.forEach(function(hab) {
+   html += '<tr><td class="habit-name-cell">' + hab.label + '</td>';
+   weekDays.forEach(function(d) {
+     var done = habits[d.date] && habits[d.date][hab.key];
+     var isTodayCol = d.date === todayStr;
+     html += '<td style="' + (isTodayCol ? 'background:rgba(61,171,138,0.08);' : '') + '"><div class="habit-dot' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + d.date + '\',\'' + hab.key + '\')"></div></td>';
+   });
+   html += '</tr>';
+ });
+ html += '</tbody></table></div></div></div>';
+ html += '<div class="card"><div class="card-header"><span class="card-title">Completion</span></div><div class="card-body"><div class="score-bar-wrap">';
+ HABITS.forEach(function(hab) {
+   var total = weekDays.length, done = 0;
+   weekDays.forEach(function(d){ if (habits[d.date] && habits[d.date][hab.key]) done++; });
+   var pct = total ? Math.round(done/total*100) : 0;
+   html += '<div class="score-bar-row"><div class="score-bar-label">' + hab.label + '</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:' + pct + '%"></div></div><div class="score-pct">' + pct + '%</div></div>';
+ });
+ html += '</div></div></div>';
+ document.getElementById('habits-content').innerHTML = html;
+}
+
+function setHabitsWeek(w) {
+ state.currentHabitsWeek = w;
+ saveState();
+ renderHabits();
+}
+
+function toggleHabit(dateKey, habitKey) {
+ var habits = loadData('habits', {});
+ if (!habits[dateKey]) habits[dateKey] = {};
+ habits[dateKey][habitKey] = !habits[dateKey][habitKey];
+ saveData('habits', habits);
+ // Sync back to schedule
+ var reverseMap = {
+ 'iron_oj':'iron','coffee2x':'coffee2','hydro_am':'hydro_am_done',
+ 'pep_tea':'pep_tea','hydro_pm':'hydro_pm_done','walk20':'walk'
+ };
+ if (reverseMap[habitKey]) {
+ var schedKey = reverseMap[habitKey];
+ var checklist = loadData('sched_' + dateKey, {});
+ checklist[schedKey] = habits[dateKey][habitKey];
+ saveData('sched_' + dateKey, checklist);
+ }
+ renderHabits();
+}
+
+// ============================================================
+// WALK TAB
+// ============================================================
+var DAILY_MOVES = [
+  {move:'20 squats', tip:'Feet shoulder-width apart, lower slowly, drive through heels'},
+  {move:'15 lunges each leg', tip:'Step forward, back knee hovers above floor, keep chest up'},
+  {move:'10 dumbbell shoulder press', tip:'Start at ear level, press overhead, elbows slightly forward'},
+  {move:'20 glute bridges', tip:'Feet flat, drive hips up, squeeze at the top for 2 seconds'},
+  {move:'12 dumbbell bicep curls', tip:'Keep elbows tucked, slow on the way down'},
+  {move:'15 push-ups (or on knees)', tip:'Hands just wider than shoulders, lower all the way down'},
+  {move:'20 calf raises', tip:'Hold dumbbells at sides, rise up slow, great for circulation'},
+  {move:'10 dumbbell rows each arm', tip:'Brace on a chair, pull elbow back, squeeze shoulder blade'},
+  {move:'25 jumping jacks', tip:'Low impact version: step side to side instead of jumping'},
+  {move:'15 reverse lunges each leg', tip:'Step backward instead of forward, gentler on knees'},
+  {move:'12 dumbbell deadlifts', tip:'Hinge at hips, soft bend in knees, back flat throughout'},
+  {move:'20 side leg raises each side', tip:'Stand at counter for balance, slow controlled movement'},
+  {move:'10 dumbbell tricep kickbacks', tip:'Hinge forward, upper arm parallel to floor, extend back'},
+  {move:'30 second wall sit', tip:'Thighs parallel to floor, back flat against wall'},
+  {move:'15 sumo squats', tip:'Wide stance, toes turned out, great for inner thighs'},
+  {move:'12 dumbbell chest press (on floor)', tip:'Lie on your back, lower elbows to floor, press up'},
+  {move:'20 step touches side to side', tip:'Add arms swinging for more cardio — Emily will love joining'},
+  {move:'15 hip hinges (good mornings)', tip:'No weight needed, hinge forward with flat back, feel hamstrings'},
+  {move:'10 dumbbell front raises', tip:'Arms straight, raise to shoulder height, slow and controlled'},
+  {move:'20 heel-to-toe walks (balance)', tip:'Walk heel to toe in a straight line, great for core'},
+  {move:'15 squat to overhead press', tip:'Squat down, stand up and press dumbbells overhead'},
+  {move:'12 single-leg deadlifts each side', tip:'Hinge and lift back leg, arms straight down, core tight'},
+  {move:'25 march in place (high knees)', tip:'Drive knees up to hip height, pump arms'},
+  {move:'10 dumbbell lateral raises', tip:'Slight bend in elbows, raise to shoulder height only'},
+  {move:'20 standing oblique crunches', tip:'Hand behind head, bring elbow to knee, alternate sides'},
+  {move:'15 wide-stance squats with pulse', tip:'Lower into squat and pulse 3x before standing'},
+  {move:'12 dumbbell hammer curls', tip:'Palms face each other, great for forearms too'},
+  {move:'20 standing kickbacks each leg', tip:'Hold counter for balance, squeeze glute at top'},
+  {move:'10 Arnold press', tip:'Start palms facing you, rotate out as you press up'},
+  {move:'30 second low squat hold', tip:'Stay low and breathe — then 10 slow pulses to finish'}
+];
+
+function renderWalk() {
+ var walks = loadData('walks', {});
+ var allDone = 0;
+
+ // 30 days starting Mar 19 2026
+ // Mar 19-31 = 13 days, Apr 1-17 = 17 days
+ var challengeDays = [];
+ var d, key;
+ for (d = 19; d <= 31; d++) {
+ key = '2026-03-' + (d < 10 ? '0' : '') + d;
+ challengeDays.push({key:key, label:'Mar ' + d, month:'March'});
+ }
+ for (d = 1; d <= 17; d++) {
+ key = '2026-04-' + (d < 10 ? '0' : '') + d;
+ challengeDays.push({key:key, label:'Apr ' + d, month:'April'});
+ }
+
+ var walkLog = loadData('walk_log', {});
+ var todayKey = getTodayET();
+ var loggedMins = walkLog[todayKey] || '';
+ // Pick today's move based on day of year so it changes daily
+ var now = new Date();
+   var utcMs = now.getTime() + now.getTimezoneOffset()*60000;
+   var etOffset = -5; // EST; EDT is -4 — close enough for day-of-year
+   var etNow = new Date(utcMs + etOffset*3600000);
+   var dayOfYear = Math.floor((etNow - new Date(etNow.getFullYear(),0,0)) / 86400000);
+ var todayMove = DAILY_MOVES[dayOfYear % DAILY_MOVES.length];
+ var moveChecked = loadData('move_check', {});
+ var moveDone = moveChecked[todayKey] || false;
+
+ var html = '<div class="card" style="margin-bottom:12px;">';
+ html += '<div style="padding:16px 18px;">';
+ html += '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;">';
+ html += '<div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:600;color:var(--text);">Walk</div>';
+ html += '<div style="font-size:12px;font-weight:600;color:#3dab8a;">Goal: 20 mins/day</div>';
+ html += '</div>';
+
+ html += '<div style="border-top:1px solid var(--sage-light);padding-top:12px;margin-bottom:12px;">';
+ html += '<div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Or log actual walk time</div>';
+ html += '<div style="display:flex;gap:10px;align-items:center;">';
+ html += '<input type="number" min="1" max="180" placeholder="mins" id="walk_mins_input" value="' + loggedMins + '" style="width:80px;padding:10px 12px;border-radius:10px;border:2px solid var(--input-border);background:var(--input-bg);font-size:16px;font-weight:700;color:var(--text);outline:none;box-sizing:border-box;">';
+ html += '<span style="font-size:14px;color:var(--text-muted);">minutes</span>';
+ html += '<button onclick="logWalkMins()" style="padding:10px 18px;border-radius:10px;border:none;background:var(--mint);color:white;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Log</button>';
+ if (loggedMins) html += '<span style="font-size:13px;color:#3dab8a;font-weight:600;">' + loggedMins + ' min ✓</span>';
+ html += '</div></div>';
+ html += '<div style="border-top:1px solid var(--sage-light);padding-top:12px;">';
+ html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_move_col\')"><span class="meal-meta-label">Move of the day</span><span class="chevron" id="walk_move_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="walk_move_col"><div class="meal-meta-text">';
+ html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">A quick bodyweight or dumbbell move you can do at home — tap to check off when done.</div>';
+ html += '<div style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:6px;" onclick="toggleMoveCheck()">';
+ html += '<div style="width:22px;height:22px;border-radius:50%;border:2px solid ' + (moveDone ? '#3dab8a' : '#c4d9c4') + ';background:' + (moveDone ? '#3dab8a' : 'none') + ';flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;" id="move_check_circle">' + (moveDone ? '<span style=\"color:white;font-size:11px;font-weight:700;\">&#10003;</span>' : '') + '</div>';
+ html += '<div><div style="font-size:16px;font-weight:700;color:var(--text);' + (moveDone ? 'text-decoration:line-through;opacity:0.5;' : '') + '">' + todayMove.move + '</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px;">' + todayMove.tip + '</div></div></div>';
+ html += '</div></div></div>';
+ var bonusLog = loadData('bonus_log', {});
+ var bonusToday = bonusLog[todayKey] || '';
+ html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_bonus_col\')"><span class="meal-meta-label">Bonus activity</span><span class="chevron" id="walk_bonus_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="walk_bonus_col"><div class="meal-meta-text"><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Yoga, stretching, dance with Emily, stairs — anything counts.</div><textarea class="notes-input" rows="3" placeholder="e.g. 10 min yoga, danced with Emily, took stairs all day..." onchange="saveBonusLog(\'' + todayKey + '\',this.value)" style="margin-bottom:0;">' + bonusToday + '</textarea></div></div></div>';
+ html += '</div>';
+ html += '</div></div>';
+ html += '<div class="card"><div class="card-header"><span class="card-title"> 30-Day Challenge</span></div>';
+ html += '<div class="card-body">';
+
+ // Calendar-aligned grid: Sun-Sat columns
+ // Day headers
+ html += '<div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase;">March – April 2026</div>';
+ html += '<div class="walk-grid" style="margin-bottom:4px;">';
+ ['S','M','T','W','T','F','S'].forEach(function(d) {
+   html += '<div style="font-size:10px;font-weight:700;color:var(--text-muted);text-align:center;padding:2px 0;">' + d + '</div>';
+ });
+ html += '</div>';
+ // March: Mar 19 is Thursday = index 4 in Sun-Sat, so 4 empty cells first
+ html += '<div class="walk-grid">';
+ for (var e = 0; e < 4; e++) { html += '<div></div>'; }
+ // Mar 19-31
+ for (var md = 19; md <= 31; md++) {
+   var mkey = '2026-03-' + (md < 10 ? '0' : '') + md;
+   var done = walks[mkey] || false;
+   if (done) allDone++;
+   html += '<div class="walk-day' + (done ? ' done' : '') + '" onclick="toggleWalk(\'' + mkey + '\')">';
+   html += '<div class="wd-num">' + md + '</div>';
+   html += '<div class="wd-label">' + (done ? '\u2713' : 'Mar') + '</div></div>';
+ }
+ // Mar 31 is Tuesday (index 3), so next is Wed (index 4) = Apr 1 same row
+ // Mar has 13 days (19-31), started at col 4, so ends at col (4+13-1)%7 = col 2 (Tue) — 3 more to fill row
+ // Actually just let Apr 1 continue in same grid row, no break
+ // Apr 1 is Wednesday = index 3, falls right after Mar 31 (Tue=index 2) naturally in same grid
+ for (var ad = 1; ad <= 17; ad++) {
+   var akey = '2026-04-' + (ad < 10 ? '0' : '') + ad;
+   var adone = walks[akey] || false;
+   if (adone) allDone++;
+   html += '<div class="walk-day' + (adone ? ' done' : '') + '" onclick="toggleWalk(\'' + akey + '\')">';
+   html += '<div class="wd-num">' + ad + '</div>';
+   html += '<div class="wd-label">' + (adone ? '\u2713' : 'Apr') + '</div></div>';
+ }
+ html += '</div>';
+ html += '<div style="height:8px"></div>';
+
+ var pct = Math.round(allDone / 30 * 100);
+ html += '<div style="font-size:13px;color:#7a9478;margin-top:4px;">' + allDone + '/30 days completed</div>';
+ html += '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
+ html += '<div style="font-size:12px;color:#7a9478;text-align:center;">' + pct + '% complete </div>';
+ html += '</div></div></div>';
+
+ document.getElementById('walk-content').innerHTML = html;
+}
+
+function toggleWalk(key) {
+ var walks = loadData('walks', {});
+ walks[key] = !walks[key];
+ saveData('walks', walks);
+ renderWalk();
+}
+
+// ============================================================
+// GROCERY TAB
+// ============================================================
+function renderGrocery() {
+ var wk = state.currentGroceryWeek;
+ var gdata = wk === 1 ? W1_GROCERY : W2_GROCERY;
+ var checked = loadData('grocery_' + wk, {});
+ var showAlreadyHave = loadData('grocery_ah_open', false);
+
+ var html = '';
+ html += '<div class="grocery-week-nav">';
+ html += '<button class="week-nav-btn" ' + (wk===1?'disabled':'') + ' onclick="setGroceryWeek(1)">‹</button>';
+ html += '<span class="week-nav-title">' + (wk===1 ? 'Week 1: Mar 19–25' : 'Week 2: Mar 26–31') + '</span>';
+ html += '<button class="week-nav-btn" ' + (wk===2?'disabled':'') + ' onclick="setGroceryWeek(2)">›</button>';
+ html += '</div>';
+
+ // Grocery notes
+ var groceryNote = loadData('grocery_note_' + wk, '');
+ html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+
+ Object.keys(gdata).forEach(function(section) {
+ html += '<div class="grocery-section-label">' + section + '</div>';
+ gdata[section].forEach(function(item) {
+ var ikey = section + '_' + item.name;
+ var isChecked = checked[ikey] || false;
+ html += '<div class="grocery-item' + (isChecked ? ' checked' : '') + '" id="gi_' + wk + '_' + encodeURIComponent(ikey) + '" onclick="toggleGrocery(' + wk + ',\'' + ikey.replace(/'/g,"\\'") + '\')">';
+ html += '<div class="gi-circle"></div>';
+ html += '<span class="gi-name">' + item.name + '</span>';
+ html += '<span class="gi-qty">' + item.qty + '</span>';
+ html += '</div>';
+ });
+ });
+
+ // Already Have Section
+ html += '<div class="card" style="margin-top:16px">';
+ html += '<div class="card-header" onclick="toggleCollapsible(\'ah_col\')">';
+ html += '<span class="card-title"> Already Have</span>';
+ html += '<span class="chevron" id="ah_col_chevron"></span></div>';
+ html += '<div class="collapsible' + (showAlreadyHave ? ' open' : '') + '" id="ah_col"><div class="card-body">';
+ ALREADY_HAVE.forEach(function(item) {
+ html += '<div style="padding:7px 0;border-bottom:1px solid #e8f0e8;font-size:13px;color:#7a9478;">· ' + item + '</div>';
+ });
+ html += '</div></div></div>';
+
+ html += '<button class="copy-btn" onclick="copyGroceryList()"> Copy Unchecked Items</button>';
+
+ document.getElementById('grocery-content').innerHTML = html;
+ if (showAlreadyHave) openCollapsible('ah_col');
+}
+
+function setGroceryWeek(w) {
+ state.currentGroceryWeek = w;
+ saveState();
+ renderGrocery();
+}
+
+function toggleGrocery(wk, ikey) {
+ var checked = loadData('grocery_' + wk, {});
+ checked[ikey] = !checked[ikey];
+ saveData('grocery_' + wk, checked);
+ // Just update the single item visually (no re-render)
+ var el = document.getElementById('gi_' + wk + '_' + encodeURIComponent(ikey));
+ if (el) {
+ el.classList.toggle('checked', checked[ikey]);
+ }
+}
+
+function saveGroceryNote(wk, val) {
+ saveData('grocery_note_' + wk, val);
+}
+
+function copyGroceryList() {
+ var wk = state.currentGroceryWeek;
+ var gdata = wk === 1 ? W1_GROCERY : W2_GROCERY;
+ var checked = loadData('grocery_' + wk, {});
+ var lines = [];
+ // Grocery notes
+ var groceryNote = loadData('grocery_note_' + wk, '');
+ html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+
+ Object.keys(gdata).forEach(function(section) {
+ gdata[section].forEach(function(item) {
+ var ikey = section + '_' + item.name;
+ if (!checked[ikey]) {
+ lines.push(item.name + ' — ' + item.qty);
+ }
+ });
+ });
+ var text = lines.join('\n');
+ if (navigator.clipboard && navigator.clipboard.writeText) {
+ navigator.clipboard.writeText(text).then(function() { showToast('Copied ' + lines.length + ' items! '); });
+ } else {
+ var ta = document.createElement('textarea');
+ ta.value = text;
+ document.body.appendChild(ta);
+ ta.select();
+ document.execCommand('copy');
+ document.body.removeChild(ta);
+ showToast('Copied ' + lines.length + ' items! ');
+ }
+}
+
+// ============================================================
+// ANALYTICS TAB
+// ============================================================
+function renderAnalytics() {
+ var habits = loadData('habits', {});
+ var weighin = loadData('weighin', {});
+
+ var html = '';
+
+ // Weekly summary
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Weekly Summary</span></div>';
+ html += '<div class="card-body">';
+
+ var weeks = [
+ {label:'Week 1', days:DAYS.slice(0,7)},
+ {label:'Week 2', days:DAYS.slice(7,13)}
+ ];
+ weeks.forEach(function(wk) {
+ var totalHabitSlots = wk.days.length * HABITS.length;
+ var doneSlots = 0;
+ var totalEnergy = 0; var energyCount = 0;
+ var bloatCounts = {None:0,Mild:0,Bad:0};
+ wk.days.forEach(function(d) {
+ HABITS.forEach(function(h) {
+ if (habits[d.date] && habits[d.date][h.key]) doneSlots++;
+ });
+ var ci = loadData('checkin_' + d.date, {energy:0,bloat:''});
+ if (ci.energy) { totalEnergy += ci.energy; energyCount++; }
+ if (ci.bloat) bloatCounts[ci.bloat] = (bloatCounts[ci.bloat]||0) + 1;
+ });
+ var habitPct = Math.round(doneSlots/totalHabitSlots*100);
+ var avgEnergy = energyCount ? (totalEnergy/energyCount).toFixed(1) : '—';
+ var topBloat = Object.keys(bloatCounts).reduce(function(a,b) { return bloatCounts[a]>=bloatCounts[b]?a:b; }, 'None');
+
+ html += '<div class="stat-card">';
+ html += '<div class="stat-card-title">' + wk.label + ' (' + wk.days[0].label.slice(5) + '–' + wk.days[wk.days.length-1].label.slice(5) + ')</div>';
+ html += '<div style="display:flex;gap:16px;">';
+ html += '<div><div class="stat-big">' + habitPct + '%</div><div class="stat-label">habit score</div></div>';
+ html += '<div><div class="stat-big">' + avgEnergy + '</div><div class="stat-label">avg energy</div></div>';
+ html += '<div><div class="stat-big" style="font-size:22px;margin-top:4px;">' + topBloat + '</div><div class="stat-label">bloating</div></div>';
+ html += '</div></div>';
+ });
+
+ html += '</div></div>';
+
+ // Weight log
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Weight Trend</span></div>';
+ html += '<div class="card-body">';
+ var sundays = DAYS.filter(function(d,i) { return isSunday(i); });
+ if (sundays.length === 0) {
+ html += '<p style="font-size:13px;color:#7a9478;">Weigh-in on Sundays (Mar 23 & 30)</p>';
+ } else {
+ var prevW = null;
+ sundays.forEach(function(d) {
+ var wv = weighin[d.date];
+ html += '<div class="weight-row">';
+ html += '<span class="weight-date">' + d.label.slice(5) + '</span>';
+ if (wv) {
+ html += '<span class="weight-val">' + wv + ' lbs</span>';
+ if (prevW !== null) {
+ var delta = wv - prevW;
+ var sign = delta >= 0 ? '+' : '';
+ html += '<span class="weight-delta ' + (delta <= 0 ? 'neg' : 'pos') + '">' + sign + delta.toFixed(1) + ' lbs</span>';
+ }
+ } else {
+ html += '<span style="font-size:12px;color:#aac4aa;">Not logged yet</span>';
+ }
+ html += '</div>';
+ if (wv) prevW = wv;
+ });
+ }
+ html += '</div></div>';
+
+ // Export
+ html += '<button class="export-btn" onclick="exportForClaude()"> Export for Claude Debrief</button>';
+
+ // Tips
+ html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'tips_col\')">';
+ html += '<span class="card-title"> Tips & Rules</span>';
+ html += '<span class="chevron" id="tips_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="tips_col"><div class="card-body"><div class="tips-list">';
+ var tips = [
+ '🩸 Iron rule: Take at 9pm on empty stomach (2+ hrs after dinner) with OJ. No coffee or calcium within 1 hr.',
+ ' Magnesium at 10pm — at least 1 hr after iron.',
+ ' Keep the base meal mild for family, then add spice to your own portion after plating. Toddler eats everything you eat (plainer).',
+ ' Hydration goal: ~72oz daily. Coffee counts; peppermint tea counts.',
+ ' Big breakfast rule: aim for protein-rich, filling morning meal to support energy and weight loss.',
+ ' D3+K2: take with the fattiest meal of the day (usually dinner or big breakfast).',
+ ' Always have: hemp seeds, chia seeds, nutritional yeast, Costco nut butter.',
+ ' Never buy: coconut flakes, overnight oats, zucchini, yellow squash.'
+ ];
+ tips.forEach(function(tip) {
+ html += '<div class="tip-item"><p class="tip-text">' + tip + '</p></div>';
+ });
+ html += '</div></div></div></div>';
+
+ document.getElementById('analytics-content').innerHTML = html;
+}
+
+function exportForClaude() {
+  var habits = loadData('habits', {});
+  var weighin = loadData('weighin', {});
+  var weighTs = loadData('weighin_ts', {});
+  var walks = loadData('walks', {});
+  var lines = [];
+
+  var allDays = [];
+  DAYS.forEach(function(d, i) {
+    var ci = loadData('checkin_' + d.date, {energy:0,bloat:''});
+    var sl = loadData('sleep_' + d.date, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
+    var ts = loadData('sched_ts_' + d.date, {});
+    var bloatTs = loadData('bloat_ts_' + d.date, {time:'',val:''});
+    var hd = habits[d.date] || {};
+    var schedNote = loadData('sched_note_' + d.date, '');
+    var mealNotes = loadData('notes_' + d.date, {});
+    var eatingQ = loadData('eating_q_' + d.date, '');
+    allDays.push({d:d, i:i, ci:ci, sl:sl, ts:ts, bloatTs:bloatTs, hd:hd, schedNote:schedNote, mealNotes:mealNotes, eatingQ:eatingQ});
+  });
+
+  lines.push('=== WELLNESS JOURNAL WEEKLY DEBRIEF ===');
+  lines.push('Exported: ' + new Date().toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric',year:'numeric'}));
+  lines.push('');
+  lines.push('ABOUT ME');
+  lines.push('Vegan mom, anemic. Iron 65mg at 9pm with OJ on empty stomach (2+ hrs after dinner). Magnesium 10pm.');
+  lines.push('Mild food only. 2-year-old daughter Emily (vegan too) eats what I eat, plainer. No red sauce for Emily.');
+  lines.push('Goals: weight loss + healthy habits. Supplement schedule is critical.');
+  lines.push('');
+  var gNote1 = loadData('grocery_note_1', '');
+  var gNote2 = loadData('grocery_note_2', '');
+  if (gNote1 || gNote2) {
+    lines.push('GROCERY NOTES');
+    if (gNote1) lines.push('Week 1: ' + gNote1);
+    if (gNote2) lines.push('Week 2: ' + gNote2);
+    lines.push('');
+  }
+
+  var sundays = DAYS.filter(function(d,i) { return isSunday(i); });
+  var hasWeighIns = sundays.some(function(d) { return weighin[d.date]; });
+  if (hasWeighIns) {
+    lines.push('WEIGHT LOG');
+    var prevW = null;
+    sundays.forEach(function(d) {
+      var wv = weighin[d.date];
+      if (wv) {
+        var wline = d.label + ': ' + wv + ' lbs';
+        if (weighTs[d.date]) wline += ' (weighed at ' + weighTs[d.date] + ')';
+        if (prevW !== null) {
+          var delta = wv - prevW;
+          wline += '  =>  ' + (delta >= 0 ? '+' : '') + delta.toFixed(1) + ' lbs';
+        }
+        lines.push(wline);
+        prevW = wv;
+      }
+    });
+    lines.push('');
+  }
+
+  lines.push('HABIT SUMMARY');
+  var totalDays = 0; var totalSlots = 0; var doneSlots = 0;
+  allDays.forEach(function(day) {
+    var anyLogged = HABITS.some(function(h) { return day.hd[h.key] !== undefined; });
+    if (anyLogged) { totalDays++; HABITS.forEach(function(h) { totalSlots++; if (day.hd[h.key]) doneSlots++; }); }
+  });
+  if (totalDays > 0) lines.push('Overall: ' + doneSlots + '/' + totalSlots + ' (' + Math.round(doneSlots/totalSlots*100) + '%) across ' + totalDays + ' days');
+  HABITS.forEach(function(h) {
+    var done = 0; var total = 0;
+    allDays.forEach(function(day) {
+      if (day.hd[h.key] !== undefined) { total++; if (day.hd[h.key]) done++; }
+    });
+    if (total > 0) {
+      var pct = Math.round(done/total*100);
+      var bar = '';
+      for (var b = 0; b < 10; b++) { bar += (b < Math.round(pct/10)) ? '#' : '-'; }
+      lines.push('  ' + h.label + ': ' + done + '/' + total + ' [' + bar + '] ' + pct + '%');
+    }
+  });
+  lines.push('');
+
+  var walkDone = Object.keys(walks).filter(function(k) { return walks[k]; }).length;
+  var walkLog = loadData('walk_log', {});
+  var walkLogEntries = Object.keys(walkLog).filter(function(k) { return walkLog[k]; });
+  lines.push('WALK CHALLENGE: ' + walkDone + '/30 days (' + Math.round(walkDone/30*100) + '%)');
+  if (walkLogEntries.length) {
+    var totalMins = walkLogEntries.reduce(function(s,k) { return s + walkLog[k]; }, 0);
+    lines.push('Actual walk times logged: ' + walkLogEntries.map(function(k) { return k.slice(5) + ': ' + walkLog[k] + 'min'; }).join(', '));
+    lines.push('Total walking time logged: ' + totalMins + ' min');
+  }
+  lines.push('');
+
+  lines.push('ENERGY ANALYSIS');
+  var energyDays = allDays.filter(function(day) { return day.ci.energy; });
+  if (!energyDays.length) {
+    lines.push('No energy data yet.');
+  } else {
+    var avgE = energyDays.reduce(function(s,day) { return s + day.ci.energy; }, 0) / energyDays.length;
+    lines.push('Average: ' + avgE.toFixed(1) + '/5 over ' + energyDays.length + ' days');
+    var byLv = {1:[],2:[],3:[],4:[],5:[]};
+    energyDays.forEach(function(day) { byLv[day.ci.energy].push(day.d.label.slice(5)); });
+    for (var lv = 5; lv >= 1; lv--) { if (byLv[lv].length) lines.push('  Level ' + lv + ': ' + byLv[lv].join(', ')); }
+    var lowE = energyDays.filter(function(day) { return day.ci.energy <= 2; });
+    if (lowE.length) {
+      lines.push('Low energy days with meal context:');
+      lowE.forEach(function(day) {
+        var meal = MEALS[day.i];
+        lines.push('  ' + day.d.label + ' (energy ' + day.ci.energy + '): ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+        if (day.ci.bloat) lines.push('    bloating: ' + day.ci.bloat);
+        if (day.sl.wake || day.sl.bed) lines.push('    sleep: up ' + (day.sl.wake||'?') + ', bed ' + (day.sl.bed||'?'));
+      });
+    }
+  }
+  lines.push('');
+
+  lines.push('BLOATING ANALYSIS');
+  var bloatDays = allDays.filter(function(day) { return day.ci.bloat; });
+  if (!bloatDays.length) {
+    lines.push('No bloating data yet.');
+  } else {
+    var bc = {None:0,Mild:0,Bad:0};
+    bloatDays.forEach(function(day) { if (bc[day.ci.bloat] !== undefined) bc[day.ci.bloat]++; });
+    lines.push(bloatDays.length + ' days logged — None: ' + bc.None + ', Mild: ' + bc.Mild + ', Bad: ' + bc.Bad);
+    var notableBloat = bloatDays.filter(function(day) { return day.ci.bloat === 'Mild' || day.ci.bloat === 'Bad'; });
+    if (notableBloat.length) {
+      lines.push('Bloating days detail:');
+      notableBloat.forEach(function(day) {
+        var meal = MEALS[day.i];
+        var bl = '  ' + day.d.label + ' [' + day.ci.bloat + ']';
+        if (day.bloatTs.time) bl += ' noticed at ' + day.bloatTs.time;
+        lines.push(bl);
+        lines.push('    Meals: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+        if (day.ci.energy) lines.push('    Energy: ' + day.ci.energy + '/5');
+        ['breakfast','lunch','dinner'].forEach(function(mt) { if (day.mealNotes[mt]) lines.push('    ' + mt + ': ' + day.mealNotes[mt]); });
+      });
+    }
+    lines.push('Please identify any meal or timing patterns that correlate with bloating.');
+  }
+  lines.push('');
+
+  lines.push('MY SLEEP SUMMARY');
+  var mySleepDays = allDays.filter(function(day) { return day.sl.wake || day.sl.bed; });
+  if (!mySleepDays.length) {
+    lines.push('No sleep data yet.');
+  } else {
+    mySleepDays.forEach(function(day) {
+      var sl = '  ' + day.d.label + ':';
+      if (day.sl.wake) sl += ' up ' + day.sl.wake;
+      if (day.sl.bed) sl += ', bed ' + day.sl.bed;
+      if (day.sl.sick === 'Yes') sl += ' [SICK]';
+      if (day.ci.energy) sl += ' | energy ' + day.ci.energy + '/5';
+      lines.push(sl);
+    });
+  }
+  lines.push('');
+
+  lines.push('EMILY SLEEP LOG & SCHEDULE ANALYSIS REQUEST');
+  lines.push('Emily is 2 years old. Bedtime goal: 8pm. Nap limit: max 1.5 hours.');
+  lines.push('Please analyze her schedule below and give concrete suggestions for hitting 8pm bedtime.');
+  var emilyDays = allDays.filter(function(day) { return day.sl.emilyWake || day.sl.emilyBed || day.sl.emilyNapStart; });
+  if (!emilyDays.length) {
+    lines.push('No Emily sleep data logged yet.');
+  } else {
+    emilyDays.forEach(function(day) {
+      var el = '  ' + day.d.label + ':';
+      if (day.sl.emilyWake) el += ' wake ' + day.sl.emilyWake;
+      if (day.sl.emilyBed) el += ', bed ' + day.sl.emilyBed;
+      if (day.sl.emilyNapStart && day.sl.emilyNapEnd) {
+        var sp = day.sl.emilyNapStart.split(':');
+        var ep = day.sl.emilyNapEnd.split(':');
+        var nm = (parseInt(ep[0])*60+parseInt(ep[1])) - (parseInt(sp[0])*60+parseInt(sp[1]));
+        if (nm > 0) {
+          el += ', nap ' + day.sl.emilyNapStart + '-' + day.sl.emilyNapEnd + ' (' + Math.floor(nm/60) + 'h' + (nm%60 ? nm%60+'m' : '') + ')';
+          if (nm > 90) el += ' OVER LIMIT';
+        }
+      } else if (day.sl.emilyNapStart) {
+        el += ', nap started ' + day.sl.emilyNapStart + ' (no end logged)';
+      }
+      if (day.sl.emilySick === 'Yes') el += ' [SICK]';
+      lines.push(el);
+    });
+    lines.push('Questions: Is nap timing helping or hurting her bedtime? What nap window works best for a 2-year-old targeting 8pm bedtime? Any red flags this week?');
+  }
+  lines.push('');
+
+  lines.push('FULL DAILY LOGS');
+  allDays.forEach(function(day) {
+    var meal = MEALS[day.i];
+    var hasData = day.ci.energy || day.ci.bloat || day.sl.wake || day.sl.bed || day.schedNote ||
+      Object.keys(day.ts).length || Object.keys(day.mealNotes).some(function(k) { return day.mealNotes[k]; });
+    if (!hasData) return;
+    lines.push('');
+    lines.push(day.d.label.toUpperCase());
+    lines.push('  Meals: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+    if (day.ci.energy) lines.push('  Energy: ' + day.ci.energy + '/5');
+    if (day.ci.bloat) { var bl = '  Bloating: ' + day.ci.bloat; if (day.bloatTs.time) bl += ' at ' + day.bloatTs.time; lines.push(bl); }
+    if (day.sl.sick === 'Yes') lines.push('  Sick: Yes');
+    ['breakfast','lunch','dinner'].forEach(function(mt) { if (day.mealNotes[mt]) lines.push('  ' + mt + ' note: ' + day.mealNotes[mt]); });
+    var ysn = loadData('your_snack_' + day.d.date, ['','']);
+    if (ysn[0]) lines.push('  Morning snack: ' + ysn[0]);
+    if (ysn[1]) lines.push('  Afternoon snack: ' + ysn[1]);
+    var snackNotes = loadData('snack_notes_' + day.d.date, '');
+    if (snackNotes) lines.push('  Snack notes: ' + snackNotes);
+    var keyTs = ['iron','walk','breakfast','lunch','dinner'];
+    var tsOut = keyTs.filter(function(k) { return day.ts[k]; }).map(function(k) { return k + '@' + day.ts[k]; });
+    if (tsOut.length) lines.push('  Times: ' + tsOut.join(', '));
+    if (day.schedNote) lines.push('  Schedule note: ' + day.schedNote);
+  });
+
+  lines.push('');
+  // Eating quality summary
+  var eqCounts = {Light:0, 'On Track':0, Indulgent:0, unlogged:0};
+  allDays.forEach(function(day) {
+    if (day.eatingQ) eqCounts[day.eatingQ] = (eqCounts[day.eatingQ]||0) + 1;
+    else eqCounts.unlogged++;
+  });
+  var eqLogged = allDays.filter(function(day) { return day.eatingQ; });
+  if (eqLogged.length) {
+    lines.push('EATING QUALITY LOG');
+    lines.push('Light: ' + (eqCounts.Light||0) + ' days | On Track: ' + (eqCounts['On Track']||0) + ' days | Indulgent: ' + (eqCounts.Indulgent||0) + ' days');
+    eqLogged.forEach(function(day) {
+      var meal = MEALS[day.i];
+      lines.push('  ' + day.d.label.slice(5) + ' [' + day.eatingQ + ']: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+    });
+    lines.push('');
+  }
+
+  lines.push('=== END OF EXPORT ===');
+  lines.push('');
+  lines.push('WEIGHT LOSS CONTEXT FOR CLAUDE:');
+  lines.push('I am a vegan mom trying to lose weight steadily while building healthy habits.');
+  lines.push('I am anemic — iron-rich plant foods (lentils, beans, spinach, tofu) are important.');
+  lines.push('I eat mild food only (no spice/chili). I have a 2-year-old who eats with me.');
+  lines.push('I take iron at 9pm — vitamin C (OJ) helps absorption, calcium and coffee hurt it.');
+  lines.push('I am working toward a big breakfast habit to support metabolism and satiety.');
+  lines.push('I skipped breakfast on Day 1 — this is something I want to avoid going forward.');
+  lines.push('');
+  lines.push('REQUESTS FOR CLAUDE:');
+  lines.push('1. Habit insights — most/least consistent habits and why?');
+  lines.push('2. Energy patterns — correlations with meals, sleep, iron timing, or bloating?');
+  lines.push('3. Bloating triggers — which meals or ingredients might be causing it?');
+  lines.push('4. My sleep quality — enough hours? Next-day energy correlation?');
+  lines.push('5. Emily schedule — concrete nap/bedtime suggestions for 8pm goal.');
+  lines.push('6. Weight loss — based on my meals this week, what is working and what is not?');
+  lines.push('   Flag any meals that were high-calorie or low-protein for a vegan.');
+  lines.push('   Suggest 2-3 specific meal swaps or additions for next week to support weight loss.');
+  lines.push('   Note any iron-rich meal opportunities I missed.');
+  lines.push('7. Eating quality — any patterns between Light/On Track/Indulgent days and energy or bloating?');
+  lines.push('8. One specific focus for next week across all of the above.');
+
+  var text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() { showToast('Exported! Paste into Claude'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Exported! Paste into Claude');
+  }
+}
+
+function exportAppData() {
+  try {
+    var payload = {};
+    Object.keys(localStorage).forEach(function(k){
+      if (k.indexOf('wj_') === 0 || k === 'wj_state_v2') payload[k] = localStorage.getItem(k);
+    });
+    var text = JSON.stringify(payload);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ showToast('App data copied'); });
+    } else {
+      window.prompt('Copy your app data:', text);
+    }
+  } catch (e) {
+    showToast('Export failed');
+  }
+}
+
+function importAppData() {
+  var pasted = window.prompt('Paste exported app data JSON here');
+  if (!pasted) return;
+  try {
+    var payload = JSON.parse(pasted);
+    Object.keys(payload).forEach(function(k){ localStorage.setItem(k, payload[k]); });
+    showToast('Imported! Reloading...');
+    setTimeout(function(){ location.reload(); }, 400);
+  } catch (e) {
+    showToast('Import failed');
+  }
+}
+
+// ============================================================
+// DARK MODE
+// ============================================================
+var MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+var SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+
+function initDarkMode() {
+ var btn = document.getElementById('dark-toggle');
+ if (state.darkMode) {
+   document.documentElement.setAttribute('data-dark', 'true');
+   btn.innerHTML = SUN_SVG;
+ } else {
+   btn.innerHTML = MOON_SVG;
+ }
+ btn.addEventListener('click', function() {
+   state.darkMode = !state.darkMode;
+   document.documentElement.setAttribute('data-dark', state.darkMode ? 'true' : 'false');
+   this.innerHTML = state.darkMode ? SUN_SVG : MOON_SVG;
+ saveState();
+ });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+ loadState();
+ var seedWeigh = loadData('weighin', {});
+ if (!seedWeigh['2026-03-22']) { seedWeigh['2026-03-22'] = 167; saveData('weighin', seedWeigh); }
+ // Auto-navigate to current day based on today's date
+ var today = getTodayET();
+ var todayIdx = -1;
+ for (var di = 0; di < DAYS.length; di++) {
+   if (DAYS[di].date === today) { todayIdx = di; break; }
+ }
+ if (todayIdx >= 0) {
+   state.currentDay = todayIdx;
+   saveState();
+ }
+ initDarkMode();
+ renderMeals();
+});
+</script>
+</body>
+</html>
