@@ -155,7 +155,7 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 .walk-day.done{background:var(--mint);border-color:var(--mint);}
 .walk-day.done .wd-num{color:white;}
 .walk-day.done .wd-label{color:rgba(255,255,255,0.8);}
-.walk-day.today{border-color:var(--mint);}
+.walk-day.today{background:rgba(61,171,138,0.14);}
 .progress-bar{height:12px;border-radius:6px;background:var(--sage-light);overflow:hidden;margin:12px 0 6px;}
 .progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#3dab8a,#7ab8d4);transition:width 0.5s ease;}
 /* GROCERY */
@@ -727,7 +727,7 @@ function getTimeStampET() {
 }
 
 function getWeekDaysForCurrentGrocery() {
- return state.currentGroceryWeek === 1 ? DAYS.slice(0,7) : DAYS.slice(7,13);
+ return state.currentGroceryWeek === 1 ? DAYS.slice(0,6) : DAYS.slice(6,13);
 }
 
 function getMealExtras(meal, mealKey, dayIndex) {
@@ -1052,7 +1052,7 @@ function toggleSnackCheck(dateKey, key) {
 function saveEmilyNotes(dateKey, val) {
   saveData('emily_notes_' + dateKey, val);
 }
-function saveSleepInputValue(dateKey, field) {
+function saveSleepInputBlur(dateKey, field) {
  var input = document.getElementById('sleep_' + field + '_' + dateKey);
  if (!input) return;
  saveSleepField(dateKey, field, input.value);
@@ -1202,16 +1202,10 @@ function saveSleepField(dateKey, field, val) {
    saveData('habits', habits2);
    if (bedOk) showToast('In bed by 10:30pm — habit checked!');
  }
- // Re-render meals to show updated Emily feedback — preserve emily_col open state
+ // Re-render meals after Emily time saves and collapse the section
  if (field === 'emilyWake' || field === 'emilyNapStart' || field === 'emilyNapEnd' || field === 'emilyBed') {
-   var emilyColWasOpen = document.getElementById('emily_col') && document.getElementById('emily_col').classList.contains('open');
    renderMeals();
-   if (emilyColWasOpen) {
-     var ec = document.getElementById('emily_col');
-     var ech = document.getElementById('emily_col_chevron');
-     if (ec) { ec.classList.add('open'); }
-     if (ech) { ech.classList.add('open'); }
-   }
+   showToast('Saved');
    return;
  }
  // Update sick buttons in-place
@@ -1523,13 +1517,11 @@ function renderGrocery() {
  var html = '';
  html += '<div class="grocery-week-nav">';
  html += '<button class="week-nav-btn" ' + (wk===1?'disabled':'') + ' onclick="setGroceryWeek(1)">‹</button>';
- html += '<span class="week-nav-title">' + (wk===1 ? 'Week 1: Mar 19–25' : 'Week 2: Mar 26–31') + '</span>';
+ html += '<span class="week-nav-title">' + (wk===1 ? 'Week 1: Mar 19–24' : 'Week 2: Mar 25–31') + '</span>';
  html += '<button class="week-nav-btn" ' + (wk===2?'disabled':'') + ' onclick="setGroceryWeek(2)">›</button>';
  html += '</div>';
 
- // Grocery notes
- var groceryNote = loadData('grocery_note_' + wk, '');
- html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+var groceryNote = loadData('grocery_note_' + wk, '');
 
  Object.keys(gdata).forEach(function(section) {
  html += '<div class="grocery-section-label">' + section + '</div>';
@@ -1556,6 +1548,7 @@ function renderGrocery() {
  html += '</div></div></div>';
 
  html += '<button class="copy-btn" onclick="copyGroceryList()"> Copy Unchecked Items</button>';
+ html += '<div class="meal-notes-wrap"><div class="meal-notes-label">Grocery notes</div><textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-top:0;">' + groceryNote + '</textarea></div>';
 
  document.getElementById('grocery-content').innerHTML = html;
  if (showAlreadyHave) openCollapsible('ah_col');
@@ -1587,9 +1580,7 @@ function copyGroceryList() {
  var gdata = wk === 1 ? W1_GROCERY : W2_GROCERY;
  var checked = loadData('grocery_' + wk, {});
  var lines = [];
- // Grocery notes
- var groceryNote = loadData('grocery_note_' + wk, '');
- html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+var groceryNote = loadData('grocery_note_' + wk, '');
 
  Object.keys(gdata).forEach(function(section) {
  gdata[section].forEach(function(item) {
@@ -1627,8 +1618,8 @@ function renderAnalytics() {
  html += '<div class="card-body">';
 
  var weeks = [
- {label:'Week 1', days:DAYS.slice(0,7)},
- {label:'Week 2', days:DAYS.slice(7,13)}
+ {label:'Week 1', days:DAYS.slice(0,6)},
+ {label:'Week 2', days:DAYS.slice(6,13)}
  ];
  weeks.forEach(function(wk) {
  var totalHabitSlots = wk.days.length * HABITS.length;
@@ -2004,6 +1995,36 @@ function importAppData() {
   }
 }
 
+
+function seedHistoricalData() {
+ var habits = loadData('habits', {});
+ var changed = false;
+ function setHabit(date, key, val) { if (!habits[date]) habits[date] = {}; if (habits[date][key] === undefined) { habits[date][key] = val; changed = true; } }
+ ['2026-03-19','2026-03-20','2026-03-21','2026-03-22','2026-03-23','2026-03-24'].forEach(function(d){
+   setHabit(d,'hydration', true); setHabit(d,'walk20', true);
+ });
+ ['2026-03-19','2026-03-20','2026-03-21','2026-03-23'].forEach(function(d){ setHabit(d,'iron_oj', true); });
+ ['2026-03-20','2026-03-21','2026-03-24'].forEach(function(d){ setHabit(d,'big_bfast', true); });
+ ['2026-03-20','2026-03-22','2026-03-23'].forEach(function(d){ setHabit(d,'sweet_treat', true); });
+ ['2026-03-20','2026-03-23'].forEach(function(d){ setHabit(d,'alcohol_free', true); });
+ if (changed) saveData('habits', habits);
+ var checks = {
+  '2026-03-19': {energy:5,bloat:'Mild'},
+  '2026-03-20': {energy:5,bloat:'None'},
+  '2026-03-21': {energy:3,bloat:'None'},
+  '2026-03-22': {energy:4,bloat:'None'},
+  '2026-03-23': {energy:2,bloat:'None'}
+ };
+ Object.keys(checks).forEach(function(date){ if (!localStorage.getItem('wj_checkin_' + date)) saveData('checkin_' + date, checks[date]); });
+ var walkLog = loadData('walk_log', {});
+ if (!walkLog['2026-03-19']) walkLog['2026-03-19'] = 44;
+ if (!walkLog['2026-03-20']) walkLog['2026-03-20'] = 24;
+ saveData('walk_log', walkLog);
+ var walks = loadData('walks', {});
+ ['2026-03-19','2026-03-20','2026-03-21'].forEach(function(d){ if (walks[d] === undefined) walks[d] = true; });
+ saveData('walks', walks);
+}
+
 // ============================================================
 // DARK MODE
 // ============================================================
@@ -2031,6 +2052,7 @@ function initDarkMode() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
  loadState();
+ seedHistoricalData();
  var seedWeigh = loadData('weighin', {});
  if (!seedWeigh['2026-03-22']) { seedWeigh['2026-03-22'] = 167; saveData('weighin', seedWeigh); }
  // Auto-navigate to current day based on today's date
@@ -2041,6 +2063,8 @@ document.addEventListener('DOMContentLoaded', function() {
  }
  if (todayIdx >= 0) {
    state.currentDay = todayIdx;
+   state.currentGroceryWeek = todayIdx >= 6 ? 2 : 1;
+   state.currentHabitsWeek = state.currentGroceryWeek;
    saveState();
  }
  initDarkMode();
