@@ -121,14 +121,6 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 .meal-meta-toggle{padding:10px 12px !important;min-height:0 !important;background:var(--sage-light);}
 .meal-notes-wrap{margin-top:14px;padding-top:12px;border-top:1px solid rgba(138,171,138,0.18);}
 .meal-notes-label{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
-
-.meal-meta-box{margin-top:10px;border:1px solid var(--sage-mid);border-radius:12px;background:var(--sage-light);}
-.meal-meta-toggle{padding:10px 12px !important;min-height:auto;}
-.meal-meta-label{font-size:12px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--mint);}
-.meal-meta-text{padding:0 12px 12px;font-size:13px;line-height:1.5;color:var(--text);}
-.meal-notes-wrap{margin-top:12px;padding-top:12px;border-top:1px solid #e8f0e8;}
-.meal-notes-label{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
-
 /* TODDLER SNACK */
 .toddler-card{background:var(--white);border-radius:var(--radius-sm);box-shadow:none;border:1.5px dashed var(--text-muted);margin-bottom:10px;}
 .toddler-badge{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-light);background:var(--sage-light);padding:3px 10px;border-radius:10px;}
@@ -667,7 +659,7 @@ var ALREADY_HAVE = [
 // ============================================================
 var state = {
  currentDay: 0,
- currentGroceryWeek: 2,
+ currentGroceryWeek: 1,
  currentHabitsWeek: 1,
  darkMode: false
 };
@@ -987,9 +979,10 @@ function renderMeals() {
  html += '<div style="display:flex;flex-direction:column;gap:8px;">';
  [['emilyWake','Woke up'],['emilyNapStart','Nap start'],['emilyNapEnd','Nap end'],['emilyBed','Bedtime']].forEach(function(cfg){
    html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">' + cfg[1] + '</label>';
-   html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;">';
+   html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">';
    html += '<div class="time-input-wrap" style="max-width:190px;width:100%;"><input type="time" class="time-input" value="' + (sleepData[cfg[0]]||'') + '" id="sleep_' + cfg[0] + '_' + dateKey + '"></div>';
-   html += '<button type="button" aria-label="Save ' + cfg[1] + '" style="width:38px;height:38px;border-radius:50%;border:none;background:var(--sky);color:white;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;" onclick="saveEmilyTimeAndClose(\'' + dateKey + '\',\'' + cfg[0] + '\')">&#10003;</button>';
+   html += '<button type="button" class="save-btn" style="padding:10px 14px;white-space:nowrap;" onclick="saveSleepInputValue(\'' + dateKey + '\',\'' + cfg[0] + '\')">Save</button>';
+   html += '<button type="button" onclick="clearSleepField(\'' + dateKey + '\',\'' + cfg[0] + '\')" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Clear</button>';
    html += '</div></div>';
  });
  html += '</div>';
@@ -1059,10 +1052,10 @@ function toggleSnackCheck(dateKey, key) {
 function saveEmilyNotes(dateKey, val) {
   saveData('emily_notes_' + dateKey, val);
 }
-function saveEmilyTimeAndClose(dateKey, field) {
+function saveSleepInputValue(dateKey, field) {
  var input = document.getElementById('sleep_' + field + '_' + dateKey);
  if (!input) return;
- saveSleepField(dateKey, field, input.value, true);
+ saveSleepField(dateKey, field, input.value);
 }
 
 
@@ -1174,7 +1167,7 @@ function clearSleepField(dateKey, field) {
   renderMeals();
 }
 
-function saveSleepField(dateKey, field, val, shouldClose) {
+function saveSleepField(dateKey, field, val) {
  var sleepData = loadData('sleep_' + dateKey, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
  sleepData[field] = val;
  saveData('sleep_' + dateKey, sleepData);
@@ -1209,10 +1202,11 @@ function saveSleepField(dateKey, field, val, shouldClose) {
    saveData('habits', habits2);
    if (bedOk) showToast('In bed by 10:30pm — habit checked!');
  }
- // Re-render meals to show updated Emily feedback
+ // Re-render meals to show updated Emily feedback — preserve emily_col open state
  if (field === 'emilyWake' || field === 'emilyNapStart' || field === 'emilyNapEnd' || field === 'emilyBed') {
+   var emilyColWasOpen = document.getElementById('emily_col') && document.getElementById('emily_col').classList.contains('open');
    renderMeals();
-   if (!shouldClose) {
+   if (emilyColWasOpen) {
      var ec = document.getElementById('emily_col');
      var ech = document.getElementById('emily_col_chevron');
      if (ec) { ec.classList.add('open'); }
@@ -1319,7 +1313,7 @@ function renderHabits() {
    var dd = new Date(d.date + 'T12:00:00');
    var isToday = d.date === todayStr;
    var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-   html += '<th' + (isToday ? ' style="background:rgba(61,171,138,0.18);border-radius:10px 10px 0 0;color:#3dab8a;font-weight:800;"' : '') + '>' + days[dd.getDay()] + '<br><span style="font-weight:400;color:' + (isToday ? '#3dab8a' : '#aac4aa') + '">' + dd.getDate() + '</span></th>';
+   html += '<th' + (isToday ? ' style="background:rgba(61,171,138,0.12);border-radius:10px 10px 0 0;color:#3dab8a;font-weight:800;"' : '') + '>' + days[dd.getDay()] + '<br><span style="font-weight:400;color:' + (isToday ? '#3dab8a' : '#aac4aa') + '">' + dd.getDate() + '</span></th>';
  });
  html += '</tr></thead><tbody>';
  HABITS.forEach(function(hab) {
@@ -1327,7 +1321,7 @@ function renderHabits() {
    weekDays.forEach(function(d) {
      var done = habits[d.date] && habits[d.date][hab.key];
      var isTodayCol = d.date === todayStr;
-     html += '<td style="' + (isTodayCol ? 'background:rgba(61,171,138,0.12);' : '') + '"><div class="habit-dot' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + d.date + '\',\'' + hab.key + '\')"></div></td>';
+     html += '<td style="' + (isTodayCol ? 'background:rgba(61,171,138,0.08);' : '') + '"><div class="habit-dot' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + d.date + '\',\'' + hab.key + '\')"></div></td>';
    });
    html += '</tr>';
  });
@@ -1407,55 +1401,119 @@ var DAILY_MOVES = [
 function renderWalk() {
  var walks = loadData('walks', {});
  var allDone = 0;
+
+ // 30 days starting Mar 19 2026
+ // Mar 19-31 = 13 days, Apr 1-17 = 17 days
  var challengeDays = [];
  var d, key;
  for (d = 19; d <= 31; d++) {
-   key = '2026-03-' + (d < 10 ? '0' : '') + d;
-   challengeDays.push({key:key, label:'Mar ' + d, month:'March'});
+ key = '2026-03-' + (d < 10 ? '0' : '') + d;
+ challengeDays.push({key:key, label:'Mar ' + d, month:'March'});
  }
  for (d = 1; d <= 17; d++) {
-   key = '2026-04-' + (d < 10 ? '0' : '') + d;
-   challengeDays.push({key:key, label:'Apr ' + d, month:'April'});
+ key = '2026-04-' + (d < 10 ? '0' : '') + d;
+ challengeDays.push({key:key, label:'Apr ' + d, month:'April'});
  }
+
  var walkLog = loadData('walk_log', {});
  var todayKey = getTodayET();
  var loggedMins = walkLog[todayKey] || '';
+ // Pick today's move based on day of year so it changes daily
  var now = new Date();
- var utcMs = now.getTime() + now.getTimezoneOffset()*60000;
- var etOffset = -5;
- var etNow = new Date(utcMs + etOffset*3600000);
- var dayOfYear = Math.floor((etNow - new Date(etNow.getFullYear(),0,0)) / 86400000);
+   var utcMs = now.getTime() + now.getTimezoneOffset()*60000;
+   var etOffset = -5; // EST; EDT is -4 — close enough for day-of-year
+   var etNow = new Date(utcMs + etOffset*3600000);
+   var dayOfYear = Math.floor((etNow - new Date(etNow.getFullYear(),0,0)) / 86400000);
  var todayMove = DAILY_MOVES[dayOfYear % DAILY_MOVES.length];
  var moveChecked = loadData('move_check', {});
  var moveDone = moveChecked[todayKey] || false;
+
+ var html = '<div class="card" style="margin-bottom:12px;">';
+ html += '<div style="padding:16px 18px;">';
+ html += '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;">';
+ html += '<div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:600;color:var(--text);">Walk</div>';
+ html += '<div style="font-size:12px;font-weight:600;color:#3dab8a;">Goal: 20 mins/day</div>';
+ html += '</div>';
+
+ html += '<div style="border-top:1px solid var(--sage-light);padding-top:12px;margin-bottom:12px;">';
+ html += '<div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Or log actual walk time</div>';
+ html += '<div style="display:flex;gap:10px;align-items:center;">';
+ html += '<input type="number" min="1" max="180" placeholder="mins" id="walk_mins_input" value="' + loggedMins + '" style="width:80px;padding:10px 12px;border-radius:10px;border:2px solid var(--input-border);background:var(--input-bg);font-size:16px;font-weight:700;color:var(--text);outline:none;box-sizing:border-box;">';
+ html += '<span style="font-size:14px;color:var(--text-muted);">minutes</span>';
+ html += '<button onclick="logWalkMins()" style="padding:10px 18px;border-radius:10px;border:none;background:var(--mint);color:white;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Log</button>';
+ if (loggedMins) html += '<span style="font-size:13px;color:#3dab8a;font-weight:600;">' + loggedMins + ' min ✓</span>';
+ html += '</div></div>';
+ html += '<div style="border-top:1px solid var(--sage-light);padding-top:12px;">';
+ html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_move_col\')"><span class="meal-meta-label">Move of the day</span><span class="chevron" id="walk_move_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="walk_move_col"><div class="meal-meta-text">';
+ html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">A quick bodyweight or dumbbell move you can do at home — tap to check off when done.</div>';
+ html += '<div style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:6px;" onclick="toggleMoveCheck()">';
+ html += '<div style="width:22px;height:22px;border-radius:50%;border:2px solid ' + (moveDone ? '#3dab8a' : '#c4d9c4') + ';background:' + (moveDone ? '#3dab8a' : 'none') + ';flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;" id="move_check_circle">' + (moveDone ? '<span style=\"color:white;font-size:11px;font-weight:700;\">&#10003;</span>' : '') + '</div>';
+ html += '<div><div style="font-size:16px;font-weight:700;color:var(--text);' + (moveDone ? 'text-decoration:line-through;opacity:0.5;' : '') + '">' + todayMove.move + '</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px;">' + todayMove.tip + '</div></div></div>';
+ html += '</div></div></div>';
  var bonusLog = loadData('bonus_log', {});
  var bonusToday = bonusLog[todayKey] || '';
- var html = '<div class="card"><div class="card-header"><span class="card-title">30-Day Challenge</span><span class="pill pill-mint">' + Object.keys(walks).filter(function(k){return walks[k];}).length + '/30</span></div><div class="card-body">';
- html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="font-size:13px;color:var(--text-muted);font-weight:600;">Goal: 20 mins/day</div><div style="display:flex;gap:8px;align-items:center;"><input type="number" min="1" max="180" placeholder="mins" id="walk_mins_input" value="' + loggedMins + '" style="width:68px;padding:8px 10px;border-radius:10px;border:2px solid var(--input-border);background:var(--input-bg);font-size:15px;font-weight:700;color:var(--text);outline:none;box-sizing:border-box;"><button onclick="logWalkMins()" class="save-btn" style="padding:8px 12px;">Log</button></div></div>';
- html += '<div class="progress-bar"><div class="progress-fill" style="width:' + Math.round((Object.keys(walks).filter(function(k){return walks[k];}).length/30)*100) + '%"></div></div>';
- html += '<div class="walk-grid" style="margin-top:8px;">';
- ['S','M','T','W','T','F','S'].forEach(function(d) { html += '<div style="font-size:10px;font-weight:700;color:var(--text-muted);text-align:center;padding:2px 0;">' + d + '</div>'; });
- html += '</div><div class="walk-grid">';
+ html += '<div class="meal-meta-box"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_bonus_col\')"><span class="meal-meta-label">Bonus activity</span><span class="chevron" id="walk_bonus_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="walk_bonus_col"><div class="meal-meta-text"><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Yoga, stretching, dance with Emily, stairs — anything counts.</div><textarea class="notes-input" rows="3" placeholder="e.g. 10 min yoga, danced with Emily, took stairs all day..." onchange="saveBonusLog(\'' + todayKey + '\',this.value)" style="margin-bottom:0;">' + bonusToday + '</textarea></div></div></div>';
+ html += '</div>';
+ html += '</div></div>';
+ html += '<div class="card"><div class="card-header"><span class="card-title"> 30-Day Challenge</span></div>';
+ html += '<div class="card-body">';
+
+ // Calendar-aligned grid: Sun-Sat columns
+ // Day headers
+ html += '<div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase;">March – April 2026</div>';
+ html += '<div class="walk-grid" style="margin-bottom:4px;">';
+ ['S','M','T','W','T','F','S'].forEach(function(d) {
+   html += '<div style="font-size:10px;font-weight:700;color:var(--text-muted);text-align:center;padding:2px 0;">' + d + '</div>';
+ });
+ html += '</div>';
+ // March: Mar 19 is Thursday = index 4 in Sun-Sat, so 4 empty cells first
+ html += '<div class="walk-grid">';
  for (var e = 0; e < 4; e++) { html += '<div></div>'; }
+ // Mar 19-31
  for (var md = 19; md <= 31; md++) {
    var mkey = '2026-03-' + (md < 10 ? '0' : '') + md;
-   var done = walks[mkey] || false; if (done) allDone++;
-   html += '<div class="walk-day' + (done ? ' done' : '') + (mkey===todayKey ? ' today' : '') + '" onclick="toggleWalk(\'' + mkey + '\')"><div class="wd-num">' + md + '</div><div class="wd-label">Mar</div></div>';
+   var done = walks[mkey] || false;
+   if (done) allDone++;
+   html += '<div class="walk-day' + (done ? ' done' : '') + '" onclick="toggleWalk(\'' + mkey + '\')">';
+   html += '<div class="wd-num">' + md + '</div>';
+   html += '<div class="wd-label">' + (done ? '\u2713' : 'Mar') + '</div></div>';
  }
+ // Mar 31 is Tuesday (index 3), so next is Wed (index 4) = Apr 1 same row
+ // Mar has 13 days (19-31), started at col 4, so ends at col (4+13-1)%7 = col 2 (Tue) — 3 more to fill row
+ // Actually just let Apr 1 continue in same grid row, no break
+ // Apr 1 is Wednesday = index 3, falls right after Mar 31 (Tue=index 2) naturally in same grid
  for (var ad = 1; ad <= 17; ad++) {
    var akey = '2026-04-' + (ad < 10 ? '0' : '') + ad;
-   var adone = walks[akey] || false; if (adone) allDone++;
-   html += '<div class="walk-day' + (adone ? ' done' : '') + (akey===todayKey ? ' today' : '') + '" onclick="toggleWalk(\'' + akey + '\')"><div class="wd-num">' + ad + '</div><div class="wd-label">Apr</div></div>';
+   var adone = walks[akey] || false;
+   if (adone) allDone++;
+   html += '<div class="walk-day' + (adone ? ' done' : '') + '" onclick="toggleWalk(\'' + akey + '\')">';
+   html += '<div class="wd-num">' + ad + '</div>';
+   html += '<div class="wd-label">' + (adone ? '\u2713' : 'Apr') + '</div></div>';
  }
  html += '</div>';
- html += '<div class="meal-meta-box" style="margin-top:12px;"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_move_col\')"><span class="meal-meta-label">Move of the day</span><span class="chevron" id="walk_move_col_chevron"></span></div>';
- html += '<div class="collapsible" id="walk_move_col"><div class="meal-meta-text"><div style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;" onclick="toggleMoveCheck()"><div style="width:22px;height:22px;border-radius:50%;border:2px solid ' + (moveDone ? '#3dab8a' : '#c4d9c4') + ';background:' + (moveDone ? '#3dab8a' : 'none') + ';flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;">' + (moveDone ? '<span style="color:white;font-size:11px;font-weight:700;">&#10003;</span>' : '') + '</div><div><div style="font-size:15px;font-weight:700;color:var(--text);' + (moveDone ? 'text-decoration:line-through;opacity:0.5;' : '') + '">' + todayMove.move + '</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">' + todayMove.tip + '</div></div></div></div></div>';
- html += '<div class="meal-meta-box" style="margin-top:10px;"><div class="card-header meal-meta-toggle" onclick="toggleCollapsible(\'walk_bonus_col\')"><span class="meal-meta-label">Bonus activity</span><span class="chevron" id="walk_bonus_col_chevron"></span></div>';
- html += '<div class="collapsible" id="walk_bonus_col"><div class="meal-meta-text"><textarea class="notes-input" rows="2" placeholder="Yoga, stretching, dance with Emily..." onchange="saveBonusLog(\'' + todayKey + '\',this.value)" style="margin-top:0;margin-bottom:0;">' + bonusToday + '</textarea></div></div></div>';
- html += '</div></div>';
+ html += '<div style="height:8px"></div>';
+
+ var pct = Math.round(allDone / 30 * 100);
+ html += '<div style="font-size:13px;color:#7a9478;margin-top:4px;">' + allDone + '/30 days completed</div>';
+ html += '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
+ html += '<div style="font-size:12px;color:#7a9478;text-align:center;">' + pct + '% complete </div>';
+ html += '</div></div></div>';
+
  document.getElementById('walk-content').innerHTML = html;
 }
 
+function toggleWalk(key) {
+ var walks = loadData('walks', {});
+ walks[key] = !walks[key];
+ saveData('walks', walks);
+ renderWalk();
+}
+
+// ============================================================
+// GROCERY TAB
+// ============================================================
 function renderGrocery() {
  var wk = state.currentGroceryWeek;
  var gdata = wk === 1 ? W1_GROCERY : W2_GROCERY;
@@ -1465,32 +1523,63 @@ function renderGrocery() {
  var html = '';
  html += '<div class="grocery-week-nav">';
  html += '<button class="week-nav-btn" ' + (wk===1?'disabled':'') + ' onclick="setGroceryWeek(1)">‹</button>';
- html += '<span class="week-nav-title">' + (wk===1 ? 'Week 1: Mar 19–25' : 'Week 2: Mar 25–31') + '</span>';
+ html += '<span class="week-nav-title">' + (wk===1 ? 'Week 1: Mar 19–25' : 'Week 2: Mar 26–31') + '</span>';
  html += '<button class="week-nav-btn" ' + (wk===2?'disabled':'') + ' onclick="setGroceryWeek(2)">›</button>';
  html += '</div>';
 
+ // Grocery notes
+ var groceryNote = loadData('grocery_note_' + wk, '');
+ html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+
  Object.keys(gdata).forEach(function(section) {
-   html += '<div class="grocery-section-label">' + section + '</div>';
-   gdata[section].forEach(function(item) {
-     var ikey = section + '_' + item.name;
-     var isChecked = checked[ikey] || false;
-     html += '<div class="grocery-item' + (isChecked ? ' checked' : '') + '" id="gi_' + wk + '_' + encodeURIComponent(ikey) + '" onclick="toggleGrocery(' + wk + ',\'' + ikey.replace(/'/g,"\\'") + '\')">';
-     html += '<div class="gi-circle"></div><span class="gi-name">' + item.name + '</span><span class="gi-qty">' + item.qty + '</span></div>';
-   });
+ html += '<div class="grocery-section-label">' + section + '</div>';
+ gdata[section].forEach(function(item) {
+ var ikey = section + '_' + item.name;
+ var isChecked = checked[ikey] || false;
+ html += '<div class="grocery-item' + (isChecked ? ' checked' : '') + '" id="gi_' + wk + '_' + encodeURIComponent(ikey) + '" onclick="toggleGrocery(' + wk + ',\'' + ikey.replace(/'/g,"\\'") + '\')">';
+ html += '<div class="gi-circle"></div>';
+ html += '<span class="gi-name">' + item.name + '</span>';
+ html += '<span class="gi-qty">' + item.qty + '</span>';
+ html += '</div>';
+ });
  });
 
+ // Already Have Section
  html += '<div class="card" style="margin-top:16px">';
- html += '<div class="card-header" onclick="toggleCollapsible(\'ah_col\')"><span class="card-title">Already Have</span><span class="chevron" id="ah_col_chevron"></span></div>';
+ html += '<div class="card-header" onclick="toggleCollapsible(\'ah_col\')">';
+ html += '<span class="card-title"> Already Have</span>';
+ html += '<span class="chevron" id="ah_col_chevron"></span></div>';
  html += '<div class="collapsible' + (showAlreadyHave ? ' open' : '') + '" id="ah_col"><div class="card-body">';
- ALREADY_HAVE.forEach(function(item) { html += '<div style="padding:7px 0;border-bottom:1px solid #e8f0e8;font-size:13px;color:#7a9478;">· ' + item + '</div>'; });
+ ALREADY_HAVE.forEach(function(item) {
+ html += '<div style="padding:7px 0;border-bottom:1px solid #e8f0e8;font-size:13px;color:#7a9478;">· ' + item + '</div>';
+ });
  html += '</div></div></div>';
 
- var groceryNote = loadData('grocery_note_' + wk, '');
- html += '<div class="card" style="margin-top:16px"><div class="card-header"><span class="card-title">Grocery Notes</span></div><div class="card-body"><textarea class="notes-input" rows="2" placeholder="Substitutions, out of stock items, reminders..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-top:0;">' + groceryNote + '</textarea></div></div>';
- html += '<button class="copy-btn" onclick="copyGroceryList()">Copy Unchecked Items</button>';
+ html += '<button class="copy-btn" onclick="copyGroceryList()"> Copy Unchecked Items</button>';
 
  document.getElementById('grocery-content').innerHTML = html;
  if (showAlreadyHave) openCollapsible('ah_col');
+}
+
+function setGroceryWeek(w) {
+ state.currentGroceryWeek = w;
+ saveState();
+ renderGrocery();
+}
+
+function toggleGrocery(wk, ikey) {
+ var checked = loadData('grocery_' + wk, {});
+ checked[ikey] = !checked[ikey];
+ saveData('grocery_' + wk, checked);
+ // Just update the single item visually (no re-render)
+ var el = document.getElementById('gi_' + wk + '_' + encodeURIComponent(ikey));
+ if (el) {
+ el.classList.toggle('checked', checked[ikey]);
+ }
+}
+
+function saveGroceryNote(wk, val) {
+ saveData('grocery_note_' + wk, val);
 }
 
 function copyGroceryList() {
@@ -1498,24 +1587,465 @@ function copyGroceryList() {
  var gdata = wk === 1 ? W1_GROCERY : W2_GROCERY;
  var checked = loadData('grocery_' + wk, {});
  var lines = [];
+ // Grocery notes
+ var groceryNote = loadData('grocery_note_' + wk, '');
+ html += '<textarea class="notes-input" rows="2" placeholder="Grocery notes, substitutions, out of stock items..." onchange="saveGroceryNote(' + wk + ',this.value)" style="margin-bottom:14px;">' + groceryNote + '</textarea>';
+
  Object.keys(gdata).forEach(function(section) {
-   gdata[section].forEach(function(item) {
-     var ikey = section + '_' + item.name;
-     if (!checked[ikey]) lines.push(item.name + ' — ' + item.qty);
-   });
+ gdata[section].forEach(function(item) {
+ var ikey = section + '_' + item.name;
+ if (!checked[ikey]) {
+ lines.push(item.name + ' — ' + item.qty);
+ }
  });
- var textOut = lines.join('\n');
+ });
+ var text = lines.join('\n');
  if (navigator.clipboard && navigator.clipboard.writeText) {
-   navigator.clipboard.writeText(textOut).then(function() { showToast('Copied ' + lines.length + ' items!'); });
+ navigator.clipboard.writeText(text).then(function() { showToast('Copied ' + lines.length + ' items! '); });
  } else {
-   var ta = document.createElement('textarea');
-   ta.value = textOut;
-   document.body.appendChild(ta);
-   ta.select();
-   document.execCommand('copy');
-   document.body.removeChild(ta);
-   showToast('Copied ' + lines.length + ' items!');
+ var ta = document.createElement('textarea');
+ ta.value = text;
+ document.body.appendChild(ta);
+ ta.select();
+ document.execCommand('copy');
+ document.body.removeChild(ta);
+ showToast('Copied ' + lines.length + ' items! ');
  }
 }
 
+// ============================================================
+// ANALYTICS TAB
+// ============================================================
+function renderAnalytics() {
+ var habits = loadData('habits', {});
+ var weighin = loadData('weighin', {});
 
+ var html = '';
+
+ // Weekly summary
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Weekly Summary</span></div>';
+ html += '<div class="card-body">';
+
+ var weeks = [
+ {label:'Week 1', days:DAYS.slice(0,7)},
+ {label:'Week 2', days:DAYS.slice(7,13)}
+ ];
+ weeks.forEach(function(wk) {
+ var totalHabitSlots = wk.days.length * HABITS.length;
+ var doneSlots = 0;
+ var totalEnergy = 0; var energyCount = 0;
+ var bloatCounts = {None:0,Mild:0,Bad:0};
+ wk.days.forEach(function(d) {
+ HABITS.forEach(function(h) {
+ if (habits[d.date] && habits[d.date][h.key]) doneSlots++;
+ });
+ var ci = loadData('checkin_' + d.date, {energy:0,bloat:''});
+ if (ci.energy) { totalEnergy += ci.energy; energyCount++; }
+ if (ci.bloat) bloatCounts[ci.bloat] = (bloatCounts[ci.bloat]||0) + 1;
+ });
+ var habitPct = Math.round(doneSlots/totalHabitSlots*100);
+ var avgEnergy = energyCount ? (totalEnergy/energyCount).toFixed(1) : '—';
+ var topBloat = Object.keys(bloatCounts).reduce(function(a,b) { return bloatCounts[a]>=bloatCounts[b]?a:b; }, 'None');
+
+ html += '<div class="stat-card">';
+ html += '<div class="stat-card-title">' + wk.label + ' (' + wk.days[0].label.slice(5) + '–' + wk.days[wk.days.length-1].label.slice(5) + ')</div>';
+ html += '<div style="display:flex;gap:16px;">';
+ html += '<div><div class="stat-big">' + habitPct + '%</div><div class="stat-label">habit score</div></div>';
+ html += '<div><div class="stat-big">' + avgEnergy + '</div><div class="stat-label">avg energy</div></div>';
+ html += '<div><div class="stat-big" style="font-size:22px;margin-top:4px;">' + topBloat + '</div><div class="stat-label">bloating</div></div>';
+ html += '</div></div>';
+ });
+
+ html += '</div></div>';
+
+ // Weight log
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Weight Trend</span></div>';
+ html += '<div class="card-body">';
+ var sundays = DAYS.filter(function(d,i) { return isSunday(i); });
+ if (sundays.length === 0) {
+ html += '<p style="font-size:13px;color:#7a9478;">Weigh-in on Sundays (Mar 23 & 30)</p>';
+ } else {
+ var prevW = null;
+ sundays.forEach(function(d) {
+ var wv = weighin[d.date];
+ html += '<div class="weight-row">';
+ html += '<span class="weight-date">' + d.label.slice(5) + '</span>';
+ if (wv) {
+ html += '<span class="weight-val">' + wv + ' lbs</span>';
+ if (prevW !== null) {
+ var delta = wv - prevW;
+ var sign = delta >= 0 ? '+' : '';
+ html += '<span class="weight-delta ' + (delta <= 0 ? 'neg' : 'pos') + '">' + sign + delta.toFixed(1) + ' lbs</span>';
+ }
+ } else {
+ html += '<span style="font-size:12px;color:#aac4aa;">Not logged yet</span>';
+ }
+ html += '</div>';
+ if (wv) prevW = wv;
+ });
+ }
+ html += '</div></div>';
+
+ // Export
+ html += '<button class="export-btn" onclick="exportForClaude()"> Export for Claude Debrief</button>';
+
+ // Tips
+ html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'tips_col\')">';
+ html += '<span class="card-title"> Tips & Rules</span>';
+ html += '<span class="chevron" id="tips_col_chevron"></span></div>';
+ html += '<div class="collapsible" id="tips_col"><div class="card-body"><div class="tips-list">';
+ var tips = [
+ '🩸 Iron rule: Take at 9pm on empty stomach (2+ hrs after dinner) with OJ. No coffee or calcium within 1 hr.',
+ ' Magnesium at 10pm — at least 1 hr after iron.',
+ ' Keep the base meal mild for family, then add spice to your own portion after plating. Toddler eats everything you eat (plainer).',
+ ' Hydration goal: ~72oz daily. Coffee counts; peppermint tea counts.',
+ ' Big breakfast rule: aim for protein-rich, filling morning meal to support energy and weight loss.',
+ ' D3+K2: take with the fattiest meal of the day (usually dinner or big breakfast).',
+ ' Always have: hemp seeds, chia seeds, nutritional yeast, Costco nut butter.',
+ ' Never buy: coconut flakes, overnight oats, zucchini, yellow squash.'
+ ];
+ tips.forEach(function(tip) {
+ html += '<div class="tip-item"><p class="tip-text">' + tip + '</p></div>';
+ });
+ html += '</div></div></div></div>';
+
+ document.getElementById('analytics-content').innerHTML = html;
+}
+
+function exportForClaude() {
+  var habits = loadData('habits', {});
+  var weighin = loadData('weighin', {});
+  var weighTs = loadData('weighin_ts', {});
+  var walks = loadData('walks', {});
+  var lines = [];
+
+  var allDays = [];
+  DAYS.forEach(function(d, i) {
+    var ci = loadData('checkin_' + d.date, {energy:0,bloat:''});
+    var sl = loadData('sleep_' + d.date, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
+    var ts = loadData('sched_ts_' + d.date, {});
+    var bloatTs = loadData('bloat_ts_' + d.date, {time:'',val:''});
+    var hd = habits[d.date] || {};
+    var schedNote = loadData('sched_note_' + d.date, '');
+    var mealNotes = loadData('notes_' + d.date, {});
+    var eatingQ = loadData('eating_q_' + d.date, '');
+    allDays.push({d:d, i:i, ci:ci, sl:sl, ts:ts, bloatTs:bloatTs, hd:hd, schedNote:schedNote, mealNotes:mealNotes, eatingQ:eatingQ});
+  });
+
+  lines.push('=== WELLNESS JOURNAL WEEKLY DEBRIEF ===');
+  lines.push('Exported: ' + new Date().toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric',year:'numeric'}));
+  lines.push('');
+  lines.push('ABOUT ME');
+  lines.push('Vegan mom, anemic. Iron 65mg at 9pm with OJ on empty stomach (2+ hrs after dinner). Magnesium 10pm.');
+  lines.push('Mild food only. 2-year-old daughter Emily (vegan too) eats what I eat, plainer. No red sauce for Emily.');
+  lines.push('Goals: weight loss + healthy habits. Supplement schedule is critical.');
+  lines.push('');
+  var gNote1 = loadData('grocery_note_1', '');
+  var gNote2 = loadData('grocery_note_2', '');
+  if (gNote1 || gNote2) {
+    lines.push('GROCERY NOTES');
+    if (gNote1) lines.push('Week 1: ' + gNote1);
+    if (gNote2) lines.push('Week 2: ' + gNote2);
+    lines.push('');
+  }
+
+  var sundays = DAYS.filter(function(d,i) { return isSunday(i); });
+  var hasWeighIns = sundays.some(function(d) { return weighin[d.date]; });
+  if (hasWeighIns) {
+    lines.push('WEIGHT LOG');
+    var prevW = null;
+    sundays.forEach(function(d) {
+      var wv = weighin[d.date];
+      if (wv) {
+        var wline = d.label + ': ' + wv + ' lbs';
+        if (weighTs[d.date]) wline += ' (weighed at ' + weighTs[d.date] + ')';
+        if (prevW !== null) {
+          var delta = wv - prevW;
+          wline += '  =>  ' + (delta >= 0 ? '+' : '') + delta.toFixed(1) + ' lbs';
+        }
+        lines.push(wline);
+        prevW = wv;
+      }
+    });
+    lines.push('');
+  }
+
+  lines.push('HABIT SUMMARY');
+  var totalDays = 0; var totalSlots = 0; var doneSlots = 0;
+  allDays.forEach(function(day) {
+    var anyLogged = HABITS.some(function(h) { return day.hd[h.key] !== undefined; });
+    if (anyLogged) { totalDays++; HABITS.forEach(function(h) { totalSlots++; if (day.hd[h.key]) doneSlots++; }); }
+  });
+  if (totalDays > 0) lines.push('Overall: ' + doneSlots + '/' + totalSlots + ' (' + Math.round(doneSlots/totalSlots*100) + '%) across ' + totalDays + ' days');
+  HABITS.forEach(function(h) {
+    var done = 0; var total = 0;
+    allDays.forEach(function(day) {
+      if (day.hd[h.key] !== undefined) { total++; if (day.hd[h.key]) done++; }
+    });
+    if (total > 0) {
+      var pct = Math.round(done/total*100);
+      var bar = '';
+      for (var b = 0; b < 10; b++) { bar += (b < Math.round(pct/10)) ? '#' : '-'; }
+      lines.push('  ' + h.label + ': ' + done + '/' + total + ' [' + bar + '] ' + pct + '%');
+    }
+  });
+  lines.push('');
+
+  var walkDone = Object.keys(walks).filter(function(k) { return walks[k]; }).length;
+  var walkLog = loadData('walk_log', {});
+  var walkLogEntries = Object.keys(walkLog).filter(function(k) { return walkLog[k]; });
+  lines.push('WALK CHALLENGE: ' + walkDone + '/30 days (' + Math.round(walkDone/30*100) + '%)');
+  if (walkLogEntries.length) {
+    var totalMins = walkLogEntries.reduce(function(s,k) { return s + walkLog[k]; }, 0);
+    lines.push('Actual walk times logged: ' + walkLogEntries.map(function(k) { return k.slice(5) + ': ' + walkLog[k] + 'min'; }).join(', '));
+    lines.push('Total walking time logged: ' + totalMins + ' min');
+  }
+  lines.push('');
+
+  lines.push('ENERGY ANALYSIS');
+  var energyDays = allDays.filter(function(day) { return day.ci.energy; });
+  if (!energyDays.length) {
+    lines.push('No energy data yet.');
+  } else {
+    var avgE = energyDays.reduce(function(s,day) { return s + day.ci.energy; }, 0) / energyDays.length;
+    lines.push('Average: ' + avgE.toFixed(1) + '/5 over ' + energyDays.length + ' days');
+    var byLv = {1:[],2:[],3:[],4:[],5:[]};
+    energyDays.forEach(function(day) { byLv[day.ci.energy].push(day.d.label.slice(5)); });
+    for (var lv = 5; lv >= 1; lv--) { if (byLv[lv].length) lines.push('  Level ' + lv + ': ' + byLv[lv].join(', ')); }
+    var lowE = energyDays.filter(function(day) { return day.ci.energy <= 2; });
+    if (lowE.length) {
+      lines.push('Low energy days with meal context:');
+      lowE.forEach(function(day) {
+        var meal = MEALS[day.i];
+        lines.push('  ' + day.d.label + ' (energy ' + day.ci.energy + '): ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+        if (day.ci.bloat) lines.push('    bloating: ' + day.ci.bloat);
+        if (day.sl.wake || day.sl.bed) lines.push('    sleep: up ' + (day.sl.wake||'?') + ', bed ' + (day.sl.bed||'?'));
+      });
+    }
+  }
+  lines.push('');
+
+  lines.push('BLOATING ANALYSIS');
+  var bloatDays = allDays.filter(function(day) { return day.ci.bloat; });
+  if (!bloatDays.length) {
+    lines.push('No bloating data yet.');
+  } else {
+    var bc = {None:0,Mild:0,Bad:0};
+    bloatDays.forEach(function(day) { if (bc[day.ci.bloat] !== undefined) bc[day.ci.bloat]++; });
+    lines.push(bloatDays.length + ' days logged — None: ' + bc.None + ', Mild: ' + bc.Mild + ', Bad: ' + bc.Bad);
+    var notableBloat = bloatDays.filter(function(day) { return day.ci.bloat === 'Mild' || day.ci.bloat === 'Bad'; });
+    if (notableBloat.length) {
+      lines.push('Bloating days detail:');
+      notableBloat.forEach(function(day) {
+        var meal = MEALS[day.i];
+        var bl = '  ' + day.d.label + ' [' + day.ci.bloat + ']';
+        if (day.bloatTs.time) bl += ' noticed at ' + day.bloatTs.time;
+        lines.push(bl);
+        lines.push('    Meals: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+        if (day.ci.energy) lines.push('    Energy: ' + day.ci.energy + '/5');
+        ['breakfast','lunch','dinner'].forEach(function(mt) { if (day.mealNotes[mt]) lines.push('    ' + mt + ': ' + day.mealNotes[mt]); });
+      });
+    }
+    lines.push('Please identify any meal or timing patterns that correlate with bloating.');
+  }
+  lines.push('');
+
+  lines.push('MY SLEEP SUMMARY');
+  var mySleepDays = allDays.filter(function(day) { return day.sl.wake || day.sl.bed; });
+  if (!mySleepDays.length) {
+    lines.push('No sleep data yet.');
+  } else {
+    mySleepDays.forEach(function(day) {
+      var sl = '  ' + day.d.label + ':';
+      if (day.sl.wake) sl += ' up ' + day.sl.wake;
+      if (day.sl.bed) sl += ', bed ' + day.sl.bed;
+      if (day.sl.sick === 'Yes') sl += ' [SICK]';
+      if (day.ci.energy) sl += ' | energy ' + day.ci.energy + '/5';
+      lines.push(sl);
+    });
+  }
+  lines.push('');
+
+  lines.push('EMILY SLEEP LOG & SCHEDULE ANALYSIS REQUEST');
+  lines.push('Emily is 2 years old. Bedtime goal: 8pm. Nap limit: max 1.5 hours.');
+  lines.push('Please analyze her schedule below and give concrete suggestions for hitting 8pm bedtime.');
+  var emilyDays = allDays.filter(function(day) { return day.sl.emilyWake || day.sl.emilyBed || day.sl.emilyNapStart; });
+  if (!emilyDays.length) {
+    lines.push('No Emily sleep data logged yet.');
+  } else {
+    emilyDays.forEach(function(day) {
+      var el = '  ' + day.d.label + ':';
+      if (day.sl.emilyWake) el += ' wake ' + day.sl.emilyWake;
+      if (day.sl.emilyBed) el += ', bed ' + day.sl.emilyBed;
+      if (day.sl.emilyNapStart && day.sl.emilyNapEnd) {
+        var sp = day.sl.emilyNapStart.split(':');
+        var ep = day.sl.emilyNapEnd.split(':');
+        var nm = (parseInt(ep[0])*60+parseInt(ep[1])) - (parseInt(sp[0])*60+parseInt(sp[1]));
+        if (nm > 0) {
+          el += ', nap ' + day.sl.emilyNapStart + '-' + day.sl.emilyNapEnd + ' (' + Math.floor(nm/60) + 'h' + (nm%60 ? nm%60+'m' : '') + ')';
+          if (nm > 90) el += ' OVER LIMIT';
+        }
+      } else if (day.sl.emilyNapStart) {
+        el += ', nap started ' + day.sl.emilyNapStart + ' (no end logged)';
+      }
+      if (day.sl.emilySick === 'Yes') el += ' [SICK]';
+      lines.push(el);
+    });
+    lines.push('Questions: Is nap timing helping or hurting her bedtime? What nap window works best for a 2-year-old targeting 8pm bedtime? Any red flags this week?');
+  }
+  lines.push('');
+
+  lines.push('FULL DAILY LOGS');
+  allDays.forEach(function(day) {
+    var meal = MEALS[day.i];
+    var hasData = day.ci.energy || day.ci.bloat || day.sl.wake || day.sl.bed || day.schedNote ||
+      Object.keys(day.ts).length || Object.keys(day.mealNotes).some(function(k) { return day.mealNotes[k]; });
+    if (!hasData) return;
+    lines.push('');
+    lines.push(day.d.label.toUpperCase());
+    lines.push('  Meals: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+    if (day.ci.energy) lines.push('  Energy: ' + day.ci.energy + '/5');
+    if (day.ci.bloat) { var bl = '  Bloating: ' + day.ci.bloat; if (day.bloatTs.time) bl += ' at ' + day.bloatTs.time; lines.push(bl); }
+    if (day.sl.sick === 'Yes') lines.push('  Sick: Yes');
+    ['breakfast','lunch','dinner'].forEach(function(mt) { if (day.mealNotes[mt]) lines.push('  ' + mt + ' note: ' + day.mealNotes[mt]); });
+    var ysn = loadData('your_snack_' + day.d.date, ['','']);
+    if (ysn[0]) lines.push('  Morning snack: ' + ysn[0]);
+    if (ysn[1]) lines.push('  Afternoon snack: ' + ysn[1]);
+    var snackNotes = loadData('snack_notes_' + day.d.date, '');
+    if (snackNotes) lines.push('  Snack notes: ' + snackNotes);
+    var keyTs = ['iron','walk','breakfast','lunch','dinner'];
+    var tsOut = keyTs.filter(function(k) { return day.ts[k]; }).map(function(k) { return k + '@' + day.ts[k]; });
+    if (tsOut.length) lines.push('  Times: ' + tsOut.join(', '));
+    if (day.schedNote) lines.push('  Schedule note: ' + day.schedNote);
+  });
+
+  lines.push('');
+  // Eating quality summary
+  var eqCounts = {Light:0, 'On Track':0, Indulgent:0, unlogged:0};
+  allDays.forEach(function(day) {
+    if (day.eatingQ) eqCounts[day.eatingQ] = (eqCounts[day.eatingQ]||0) + 1;
+    else eqCounts.unlogged++;
+  });
+  var eqLogged = allDays.filter(function(day) { return day.eatingQ; });
+  if (eqLogged.length) {
+    lines.push('EATING QUALITY LOG');
+    lines.push('Light: ' + (eqCounts.Light||0) + ' days | On Track: ' + (eqCounts['On Track']||0) + ' days | Indulgent: ' + (eqCounts.Indulgent||0) + ' days');
+    eqLogged.forEach(function(day) {
+      var meal = MEALS[day.i];
+      lines.push('  ' + day.d.label.slice(5) + ' [' + day.eatingQ + ']: ' + meal.breakfast.name + ' / ' + meal.lunch.name + ' / ' + meal.dinner.name);
+    });
+    lines.push('');
+  }
+
+  lines.push('=== END OF EXPORT ===');
+  lines.push('');
+  lines.push('WEIGHT LOSS CONTEXT FOR CLAUDE:');
+  lines.push('I am a vegan mom trying to lose weight steadily while building healthy habits.');
+  lines.push('I am anemic — iron-rich plant foods (lentils, beans, spinach, tofu) are important.');
+  lines.push('I eat mild food only (no spice/chili). I have a 2-year-old who eats with me.');
+  lines.push('I take iron at 9pm — vitamin C (OJ) helps absorption, calcium and coffee hurt it.');
+  lines.push('I am working toward a big breakfast habit to support metabolism and satiety.');
+  lines.push('I skipped breakfast on Day 1 — this is something I want to avoid going forward.');
+  lines.push('');
+  lines.push('REQUESTS FOR CLAUDE:');
+  lines.push('1. Habit insights — most/least consistent habits and why?');
+  lines.push('2. Energy patterns — correlations with meals, sleep, iron timing, or bloating?');
+  lines.push('3. Bloating triggers — which meals or ingredients might be causing it?');
+  lines.push('4. My sleep quality — enough hours? Next-day energy correlation?');
+  lines.push('5. Emily schedule — concrete nap/bedtime suggestions for 8pm goal.');
+  lines.push('6. Weight loss — based on my meals this week, what is working and what is not?');
+  lines.push('   Flag any meals that were high-calorie or low-protein for a vegan.');
+  lines.push('   Suggest 2-3 specific meal swaps or additions for next week to support weight loss.');
+  lines.push('   Note any iron-rich meal opportunities I missed.');
+  lines.push('7. Eating quality — any patterns between Light/On Track/Indulgent days and energy or bloating?');
+  lines.push('8. One specific focus for next week across all of the above.');
+
+  var text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() { showToast('Exported! Paste into Claude'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Exported! Paste into Claude');
+  }
+}
+
+function exportAppData() {
+  try {
+    var payload = {};
+    Object.keys(localStorage).forEach(function(k){
+      if (k.indexOf('wj_') === 0 || k === 'wj_state_v2') payload[k] = localStorage.getItem(k);
+    });
+    var text = JSON.stringify(payload);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ showToast('App data copied'); });
+    } else {
+      window.prompt('Copy your app data:', text);
+    }
+  } catch (e) {
+    showToast('Export failed');
+  }
+}
+
+function importAppData() {
+  var pasted = window.prompt('Paste exported app data JSON here');
+  if (!pasted) return;
+  try {
+    var payload = JSON.parse(pasted);
+    Object.keys(payload).forEach(function(k){ localStorage.setItem(k, payload[k]); });
+    showToast('Imported! Reloading...');
+    setTimeout(function(){ location.reload(); }, 400);
+  } catch (e) {
+    showToast('Import failed');
+  }
+}
+
+// ============================================================
+// DARK MODE
+// ============================================================
+var MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+var SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+
+function initDarkMode() {
+ var btn = document.getElementById('dark-toggle');
+ if (state.darkMode) {
+   document.documentElement.setAttribute('data-dark', 'true');
+   btn.innerHTML = SUN_SVG;
+ } else {
+   btn.innerHTML = MOON_SVG;
+ }
+ btn.addEventListener('click', function() {
+   state.darkMode = !state.darkMode;
+   document.documentElement.setAttribute('data-dark', state.darkMode ? 'true' : 'false');
+   this.innerHTML = state.darkMode ? SUN_SVG : MOON_SVG;
+ saveState();
+ });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+ loadState();
+ var seedWeigh = loadData('weighin', {});
+ if (!seedWeigh['2026-03-22']) { seedWeigh['2026-03-22'] = 167; saveData('weighin', seedWeigh); }
+ // Auto-navigate to current day based on today's date
+ var today = getTodayET();
+ var todayIdx = -1;
+ for (var di = 0; di < DAYS.length; di++) {
+   if (DAYS[di].date === today) { todayIdx = di; break; }
+ }
+ if (todayIdx >= 0) {
+   state.currentDay = todayIdx;
+   saveState();
+ }
+ initDarkMode();
+ renderMeals();
+});
+</script>
+</body>
+</html>
