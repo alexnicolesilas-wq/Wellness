@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Wellness Journal">
@@ -35,7 +32,7 @@
  --card-shadow:0 2px 16px rgba(0,0,0,0.35);
  --card-shadow-hover:0 6px 24px rgba(0,0,0,0.45);
 }
-html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter',sans-serif;color:var(--text);transition:background 0.3s,color 0.3s;touch-action:manipulation;}
+html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter',sans-serif;color:var(--text);transition:background 0.3s,color 0.3s;}
 #app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;position:relative;background:var(--cream);}
 /* HEADER */
 #header{padding:calc(var(--safe-top) + 16px) 20px 12px;background:var(--cream);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
@@ -43,12 +40,10 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 #header-title .header-gradient{background:linear-gradient(135deg,#3dab8a 0%,#7ab8d4 40%,#a78bfa 75%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .header-tagline{font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
 .header-btns{display:flex;gap:8px;align-items:center;}
-.icon-btn{width:38px;height:38px;border-radius:50%;border:none;background:var(--white);box-shadow:var(--card-shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:transform 0.15s;}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--white);box-shadow:var(--card-shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:transform 0.15s;}
 .icon-btn:active{transform:scale(0.92);}
 /* SCROLL AREA */
 #scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--tab-h) + var(--safe-bottom) + 8px);background:var(--cream);}
-#meals-content,#habits-content,#walk-content,#grocery-content,#analytics-content{display:flex;flex-direction:column;gap:20px;padding-bottom:8px;}
-#meals-content>.card,#habits-content>.card,#walk-content>.card,#grocery-content>.card,#analytics-content>.card,#meals-content>.day-nav{margin-bottom:0;}
 /* BOTTOM NAV */
 #nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--tab-h) + var(--safe-bottom));background:var(--white);border-top:1px solid var(--sage-mid);display:flex;z-index:100;padding-bottom:var(--safe-bottom);box-shadow:0 -4px 20px rgba(61,171,138,0.08);}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;padding:6px 4px;transition:color 0.2s;border-radius:14px;}
@@ -58,13 +53,13 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 .nav-btn.active .nav-icon{transform:scale(1.15);stroke:var(--mint);}
 .nav-btn.active .nav-label{color:var(--mint);}
 /* CARDS */
-.card{background:var(--white);border-radius:var(--radius);box-shadow:0 10px 28px rgba(0,0,0,0.18);margin-bottom:20px;transition:box-shadow 0.2s,transform 0.2s;overflow:hidden;}
-.card-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;min-height:72px;}
-.card-title{font-family:'Outfit',sans-serif;font-size:19px;color:var(--text);}
-.card-body{padding:0 18px 18px;box-sizing:border-box;}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--card-shadow);margin-bottom:16px;transition:box-shadow 0.2s;}
+.card-header{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.card-title{font-family:'Outfit',sans-serif;font-size:18px;color:var(--text);}
+.card-body{padding:0 16px 16px;box-sizing:border-box;}
 .card-body input,.card-body textarea{box-sizing:border-box;width:100%;max-width:100%;display:block;}
 .time-input-wrap{display:inline-block;max-width:160px;width:48%;}
-.time-input{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:2px solid var(--input-border);background:var(--input-bg);font-size:16px;color:var(--text);outline:none;font-family:Inter,sans-serif;-webkit-appearance:none;min-height:48px;height:48px;}
+.time-input{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:2px solid var(--input-border);background:var(--input-bg);font-size:15px;color:var(--text);outline:none;font-family:Inter,sans-serif;-webkit-appearance:none;min-height:44px;height:44px;}
 .chevron{font-size:12px;color:var(--text-muted);transition:transform 0.25s;display:inline-block;}
 .chevron::after{content:"\25BE";font-size:14px;}
 .chevron.open{transform:rotate(180deg);}
@@ -76,7 +71,7 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 .pill-sky{background:var(--sky-light);color:var(--sky);}
 .pill-sage{background:var(--sage-light);color:var(--sage);}
 /* DAY NAVIGATOR */
-.day-nav{display:flex;align-items:center;justify-content:space-between;background:var(--white);border-radius:var(--radius);box-shadow:0 10px 28px rgba(0,0,0,0.16);padding:16px 20px;margin-bottom:20px;}
+.day-nav{display:flex;align-items:center;justify-content:space-between;background:var(--white);border-radius:var(--radius);box-shadow:var(--card-shadow);padding:14px 18px;margin-bottom:14px;}
 .day-nav-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--sage-light);color:var(--mint);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:background 0.15s,transform 0.15s;}
 .day-nav-btn:active{transform:scale(0.9);}
 .day-nav-btn:disabled{opacity:0.3;cursor:default;}
@@ -112,12 +107,9 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
 .step-text{font-size:16px;color:var(--text);line-height:1.6;flex:1;font-weight:500;}
 .step-text.done{text-decoration:line-through;color:var(--text-light);}
 .timer-btn{display:inline-flex;align-items:center;gap:4px;background:var(--sky-light);color:var(--sky);border:none;border-radius:12px;padding:2px 8px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;vertical-align:middle;}
-.notes-input{width:100%;box-sizing:border-box;border:2px solid var(--sage-mid);border-radius:var(--radius-xs);padding:14px 16px;font-family:'Inter',sans-serif;font-size:17px;color:var(--text);background:var(--input-bg);resize:vertical;min-height:88px;margin-top:10px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-text-size-adjust:100%;touch-action:manipulation;}
+.notes-input{width:100%;box-sizing:border-box;border:2px solid var(--sage-mid);border-radius:var(--radius-xs);padding:12px 14px;font-family:'Inter',sans-serif;font-size:16px;color:var(--text);background:var(--input-bg);resize:none;margin-top:10px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-text-size-adjust:100%;}
 .notes-input:focus{border-color:var(--mint);background:var(--input-bg);}
 .notes-input::placeholder{color:var(--text-muted);}
-.meal-meta-box{margin-top:10px;padding:10px 12px;background:var(--sage-light);border-radius:12px;}
-.meal-meta-label{font-size:11px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:0.5px;}
-.meal-meta-text{font-size:14px;color:var(--text);margin-top:3px;line-height:1.5;}
 /* TODDLER SNACK */
 .toddler-card{background:var(--white);border-radius:var(--radius-sm);box-shadow:none;border:1.5px dashed var(--text-muted);margin-bottom:10px;}
 .toddler-badge{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-light);background:var(--sage-light);padding:3px 10px;border-radius:10px;}
@@ -217,8 +209,6 @@ html,body{height:100%;overflow:hidden;background:var(--cream);font-family:'Inter
  <div id="header">
  <div id="header-title"><div><span class="header-gradient">Wellness Journal</span></div><div class="header-tagline">Mar 19 – 31 · Cleveland</div></div>
  <div class="header-btns">
- <button class="icon-btn" onclick="exportAppData()" title="Export app data">⤴</button>
- <button class="icon-btn" onclick="importAppData()" title="Import app data">⤵</button>
  <button class="icon-btn" id="dark-toggle" title="Dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
  </div>
  </div>
@@ -374,9 +364,9 @@ var MEALS = [
  breakfast:{name:'Avocado Toast + Smoothie',desc:'Classic avocado toast with a side mango smoothie',
  ingredients:['2 slices sourdough','1 avocado','Lemon, salt, hemp seeds','1 mango','1 banana','1/2 cup oat milk'],
  steps:['Toast bread. Mash avocado with lemon and salt.','Blend smoothie ingredients.','Assemble toast with hemp seeds, serve with smoothie.'],emily:'Give her the smoothie and avocado on soft toast cut into fingers.'},
- lunch:{name:'Lemony White Bean Orzo Skillet',desc:'A cozy non-soup lunch with white beans, tender orzo, spinach, and lemon.',
- ingredients:['1 can white beans (15oz), drained','3/4 cup dry orzo','2 cups baby spinach','1 tbsp olive oil','1 tsp minced garlic','1 1/2 cups veggie broth or water','1/2 lemon','Nutritional yeast'],
- steps:['Sauté garlic in olive oil 1 min.','Add orzo and broth, simmer 8-10 min until tender.','Stir in white beans and spinach until warmed through.','Finish with lemon and a sprinkle of nutritional yeast.'],emily:'Give her plain orzo with white beans, olive oil, and a little spinach if she tolerates it.'},
+ lunch:{name:'White Bean Minestrone',desc:'Simple Italian-style soup with white beans and pasta',
+ ingredients:['1 can white beans (15oz)','1 can crushed tomatoes (28oz)','Small pasta (ditalini or orzo)','Garlic (1 tsp minced), Italian herbs','Veggie broth 3 cups','Baby spinach'],
+ steps:['Sauté garlic. Add tomatoes, broth, herbs.','Add pasta and beans. Simmer 12 min.','Stir in spinach. Serve hot.'],emily:'Scoop out Emily broth and beans BEFORE adding tomatoes. Add pasta and butter for her.'},
  dinner:{name:'Tofu Tikka Masala Style',desc:'Creamy tomato-coconut sauce with crispy air-fryer tofu',
  ingredients:['2 blocks firm tofu','1 can crushed tomatoes (28oz)','1 can coconut milk (13.5oz full fat)','Garlic (1 tsp minced), ginger','Mild tikka spice blend or garam masala + cumin','Basmati rice','Flatbread or flour tortillas (vegan naan hard to find)'],
  steps:['Air fry cubed tofu 15 min at 400F.','Sauté aromatics, add spices, add tomatoes + coconut milk.','Simmer sauce 10 min. Add tofu. Serve with rice and naan.'],emily:'Hold the crushed tomatoes for her. Serve tofu in just coconut milk sauce with rice and torn naan.'},
@@ -405,9 +395,9 @@ var MEALS = [
  lunch:{name:'Pineapple Fried Rice',desc:'Tropical sweet-savory fried rice — fast and fun weekday lunch',
  ingredients:['2 cups cooked rice (day-old works best)','1 cup pineapple chunks','Frozen peas','Soy sauce 3 tbsp','Garlic (1 tsp minced), ginger','Sesame oil dash (optional)'],
  steps:['Heat cast iron very high.','Stir fry garlic & ginger 1 min.','Add rice, break up and fry 2 min.','Add pineapple, peas, soy sauce. Toss until hot and slightly crispy.'],emily:'Great toddler meal! Skip extra soy sauce. Let her self-feed the rice.'},
- dinner:{name:'Mediterranean Falafel Bowl',desc:'Friday dinner bowl with falafel, cucumber, tomatoes, hummus, and a lemony drizzle. Keep the base mild and add heat only to your bowl.',
- ingredients:['Frozen falafel (8-10 pieces)','1 cup dry rice or couscous','1/2 cucumber, chopped','1 cup cherry tomatoes, halved','1/4 red onion, thinly sliced','Romaine hearts or little gems','1/2 cup hummus','2 tbsp plain vegan yogurt or tahini','1 lemon','Pita, optional'],
- steps:['Cook rice or couscous.','Bake or air fry falafel until hot and crisp, about 10-12 min.','Stir together hummus/yogurt or tahini with lemon for a quick drizzle.','Assemble bowls with greens, grain, falafel, cucumber, tomatoes, onion, and sauce.'],emily:'Offer pita, hummus, cucumber, and a little grain separately. Skip onion and any spicy toppings.'},
+ dinner:{name:'Butternut Squash Soup',desc:'Silky Vitamix soup with coconut milk, warm spices',
+ ingredients:['1 butternut squash, cubed','1 can coconut milk (13.5oz full fat)','Veggie broth 2 cups','Garlic (1 tsp minced), ginger','Mild curry powder or cumin','Crusty bread'],
+ steps:['Roast squash 25 min at 400F.','Simmer with broth, garlic, ginger, spices.','Blend in Vitamix until silky. Add coconut milk.','Serve with crusty bread.'],emily:'Perfect for her — naturally sweet and smooth. Serve with soft bread pieces.'},
  snack1:{name:'Apple slices + nut butter'},
  snack2:{name:'Dark chocolate + walnuts'}
  },
@@ -551,7 +541,6 @@ var W1_GROCERY = {
  {name:'Flour tortillas',qty:'1 pack'},
  {name:'Corn tortillas',qty:'1 pack'},
  {name:'Flatbread or flour tortillas (vegan naan hard to find)',qty:'1 pack'},
- {name:'Pita',qty:'1 pack'},
  {name:'Crusty artisan bread',qty:'1 loaf'},
  {name:'All-purpose flour',qty:'1 bag'},
  {name:'Baking powder',qty:'1 can'}
@@ -598,18 +587,13 @@ var W2_GROCERY = {
  {name:'Pineapple',qty:'1 or canned'},
  {name:'Limes',qty:'3'},
  {name:'Lemons',qty:'2'},
- {name:'Fresh ginger',qty:'1 knob'},
- {name:'Cucumber',qty:'1–2'},
- {name:'Cherry tomatoes',qty:'1 pint'},
- {name:'Red onion',qty:'1'},
- {name:'Romaine hearts or little gems',qty:'1 pack'}
+ {name:'Fresh ginger',qty:'1 knob'}
  ],
  'Protein (Restock)':[
  {name:'Firm tofu',qty:'×2 blocks'},
  {name:'White beans',qty:'×2 cans'},
  {name:'Black beans',qty:'×2 cans'},
- {name:'Red lentils',qty:'1 bag (if low)'},
- {name:'Frozen falafel',qty:'1 bag'}
+ {name:'Red lentils',qty:'1 bag (if low)'}
  ],
  'Dairy-Free & Liquids (Restock)':[
  {name:'Oat milk',qty:'×2 cartons'},
@@ -630,10 +614,7 @@ var W2_GROCERY = {
  {name:'Frozen peas',qty:'1 bag'},
  {name:'Frozen green beans',qty:'1 bag'},
  {name:'Crushed tomatoes',qty:'×2 cans'},
- {name:'Diced tomatoes',qty:'×1 can'},
- {name:'Hummus',qty:'1 tub'},
- {name:'Plain vegan yogurt or tahini',qty:'1 small container'},
- {name:'Olives (optional)',qty:'1 jar'}
+ {name:'Diced tomatoes',qty:'×1 can'}
  ],
  'Toddler Snacks (Restock)':[
  {name:'Rice crackers',qty:'1 bag'},
@@ -715,51 +696,6 @@ function openCollapsible(id) {
  if (ch) ch.classList.add('open');
 }
 
-function getTodayET() {
- return new Intl.DateTimeFormat('en-CA', {timeZone:'America/New_York'}).format(new Date());
-}
-
-function getTimeStampET() {
- return new Intl.DateTimeFormat('en-US', {timeZone:'America/New_York', hour:'numeric', minute:'2-digit'}).format(new Date()).toLowerCase();
-}
-
-function getWeekDaysForCurrentGrocery() {
- return state.currentGroceryWeek === 1 ? DAYS.slice(0,7) : DAYS.slice(7,13);
-}
-
-function getMealExtras(meal, mealKey, dayIndex) {
- var extras = {prep:[], backup:[], glenn:''};
- var name = (meal && meal.name ? meal.name : '').toLowerCase();
- var desc = (meal && meal.desc ? meal.desc : '').toLowerCase();
- var saladish = name.indexOf('salad') >= 0 || desc.indexOf('salad') >= 0 || name.indexOf('caesar') >= 0;
- if (mealKey === 'breakfast') {
-   extras.prep = ['Set out blender cup or saucepan tonight.', 'Wash fruit or portion oats so breakfast feels automatic.'];
-   extras.backup = ['Smoothie with whatever fruit + oat milk you have.', 'Oatmeal with nut butter.', 'Toast or rice cakes with nut butter if you need ultra-easy.'];
- } else if (mealKey === 'lunch') {
-   extras.prep = ['Chop one veggie or wash greens tonight.', 'Cook one base like pasta, rice, or couscous ahead if helpful.'];
-   extras.backup = ['Pasta + olive oil + white beans.', 'Rice or couscous + chickpeas + lemon.', 'Smoothie and a simple snack plate if cooking feels like too much.'];
- } else {
-   extras.prep = ['Chop garlic/veg or press tofu the night before.', 'Cook rice or couscous ahead when you know dinner energy will be low.'];
-   extras.backup = ['Pasta + olive oil + beans.', 'Rice + chickpeas + olive oil.', 'Snack plate dinner or smoothie night totally counts.'];
- }
- if (saladish) {
-   extras.prep = ['Make the dressing tonight.', 'Wash lettuce and chop crunchy toppings ahead.'];
-   extras.backup = ['Warm couscous or rice bowl with the same toppings, no greens.', 'Chickpeas + olive oil + lemon bowl.', 'Pita + hummus if you have it.'];
-   extras.glenn = 'Serve the same toppings as a wrap, pita plate, or grain bowl instead of over greens.';
- }
- if (name.indexOf('falafel') >= 0) {
-   extras.prep = ['Chop cucumber, tomatoes, and onion ahead.', 'Stir together tahini-yogurt or lemon dressing tonight.'];
-   extras.backup = ['Warm pita + hummus plate.', 'Rice bowl with chickpeas, cucumber, and lemon.', 'Couscous bowl with olives and tomatoes if falafel sounds like too much.'];
- }
- if (name.indexOf('pasta') >= 0 || name.indexOf('orzo') >= 0) {
-   extras.backup = ['Pasta + olive oil + white beans.', 'Pasta + nutritional yeast + frozen peas.', 'Use any leftover pasta and call it done.'];
- }
- if (name.indexOf('tofu') >= 0 || name.indexOf('bowl') >= 0 || name.indexOf('rice') >= 0) {
-   extras.backup = ['Rice + chickpeas + olive oil.', 'Rice + frozen veggies + nooch.', 'Smoothie + toast on a low-effort night.'];
- }
- return extras;
-}
-
 function getDayDate(i) {
  return DAYS[i] ? DAYS[i].date : '';
 }
@@ -799,6 +735,7 @@ function renderMeals() {
  var notes = loadData('notes_' + dateKey, {});
 
  var html = '';
+ // Day Navigator
  html += '<div class="day-nav">';
  html += '<button class="day-nav-btn" ' + (i === 0 ? 'disabled' : '') + ' onclick="navDay(-1)">‹</button>';
  html += '<div class="day-nav-center"><div class="day-nav-date">' + DAYS[i].label + '</div>';
@@ -806,6 +743,7 @@ function renderMeals() {
  html += '<button class="day-nav-btn" ' + (i === DAYS.length-1 ? 'disabled' : '') + ' onclick="navDay(1)">›</button>';
  html += '</div>';
 
+ // Today's Schedule
  html += '<div class="card">';
  html += '<div class="card-header" onclick="toggleCollapsible(\'sched_col\')">';
  html += '<span class="card-title">Today\'s Schedule</span>';
@@ -813,178 +751,285 @@ function renderMeals() {
  html += '<div class="collapsible" id="sched_col"><div class="card-body">';
  var timestamps = loadData('sched_ts_' + dateKey, {});
  SCHEDULE_ITEMS.forEach(function(item) {
-   if (item.daysOfWeek) {
-     var dow = new Date(dateKey + 'T12:00:00').getDay();
-     var jsToMon = [6,0,1,2,3,4,5];
-     var dayIdx = jsToMon[dow];
-     if (item.daysOfWeek.indexOf(dayIdx) < 0) return;
-   }
-   var done = checklist[item.key] || false;
-   var ts = timestamps[item.key] || '';
-   if (done) {
-     html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;opacity:0.55;padding:3px 0;">';
-     html += '<span class="sched-time" style="font-size:10px;">' + item.time + '</span>';
-     html += '<div class="sched-check done" id="sc_' + item.key + '"></div>';
-     html += '<span class="sched-label done" id="sl_' + item.key + '" style="font-size:11px;">' + item.label + '</span>';
-     html += '</div>';
-   } else {
-     html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;">';
-     html += '<span class="sched-time">' + item.time + '</span>';
-     html += '<div class="sched-check" id="sc_' + item.key + '"></div>';
-     html += '<div style="flex:1;">';
-     html += '<span class="sched-label" id="sl_' + item.key + '">' + item.label + '</span>';
-     html += '<span id="ts_' + item.key + '" style="display:block;font-size:11px;color:#3dab8a;font-weight:600;margin-top:1px;">' + ts + '</span>';
-     html += '</div></div>';
-   }
+ // Skip day-restricted items if today isn't the right day
+ if (item.daysOfWeek) {
+   var dow = new Date(dateKey + 'T12:00:00').getDay(); // 0=Sun,1=Mon...6=Sat
+   // JS getDay: 0=Sun, our weekday: 0=Mon — convert: JS 1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat,0=Sun
+   var jsToMon = [6,0,1,2,3,4,5]; // map JS getDay to Mon=0 index
+   var dayIdx = jsToMon[dow];
+   if (item.daysOfWeek.indexOf(dayIdx) < 0) return;
+ }
+ var done = checklist[item.key] || false;
+ var ts = timestamps[item.key] || '';
+ if (done) {
+   // Collapsed done item — compact row
+   html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;opacity:0.55;padding:3px 0;">';
+   html += '<span class="sched-time" style="font-size:10px;">' + item.time + '</span>';
+   html += '<div class="sched-check done" id="sc_' + item.key + '"></div>';
+   html += '<span class="sched-label done" id="sl_' + item.key + '" style="font-size:11px;">' + item.label + '</span>';
+   html += '</div>';
+ } else {
+   html += '<div class="sched-item" onclick="toggleSchedule(\'' + dateKey + '\',\'' + item.key + '\')" style="cursor:pointer;">';
+   html += '<span class="sched-time">' + item.time + '</span>';
+   html += '<div class="sched-check" id="sc_' + item.key + '"></div>';
+   html += '<div style="flex:1;">';
+   html += '<span class="sched-label" id="sl_' + item.key + '">' + item.label + '</span>';
+   html += '<span id="ts_' + item.key + '" style="display:block;font-size:11px;color:#3dab8a;font-weight:600;margin-top:1px;">' + ts + '</span>';
+   html += '</div>';
+   html += '</div>';
+ }
  });
  var schedNote = loadData('sched_note_' + dateKey, '');
  html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid #e8f0e8">';
  html += '<div style="font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#3dab8a;margin-bottom:6px;">Schedule Notes</div>';
- html += '<textarea class="notes-input" rows="3" placeholder="How did today go? Anything to flag..." onchange="saveSchedNote(\'' + dateKey + '\',this.value)">' + schedNote + '</textarea>';
- html += '</div></div></div></div>';
+ html += '<textarea class="notes-input" rows="2" placeholder="How did today go? Anything to flag..." onchange="saveSchedNote(\'' + dateKey + '\',this.value)">' + schedNote + '</textarea>';
+ html += '</div>';
+ html += '</div></div></div>';
 
- ['breakfast','lunch','dinner'].forEach(function(mealKey) {
-   var labels = {breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner'};
-   var meal = dayData[mealKey];
-   var noteVal = notes[mealKey] || '';
-   var colId = 'meal_' + mealKey + '_' + i;
-   var ingChecked = loadData('ing_' + dateKey + '_' + mealKey, {});
-   var stepChecked = loadData('step_' + dateKey + '_' + mealKey, {});
-   var extras = getMealExtras(meal, mealKey, i);
-
-   html += '<div class="card">';
-   html += '<div class="card-header" onclick="toggleCollapsible(\'' + colId + '\')">';
-   html += '<span class="card-title">' + labels[mealKey] + '</span>';
-   html += '<span class="chevron" id="' + colId + '_chevron"></span></div>';
-   html += '<div class="collapsible" id="' + colId + '"><div class="card-body">';
-   html += '<div class="meal-name">' + meal.name + '</div>';
-   html += '<p class="meal-desc">' + meal.desc + '</p>';
-
-   html += '<div class="recipe-section"><div class="recipe-label">Ingredients</div><div class="recipe-list">';
-   (meal.ingredients || []).forEach(function(ing, ii) {
-     var idone = ingChecked[ii] || false;
-     html += '<div class="recipe-item" onclick="toggleIng(\'' + dateKey + '\',\'' + mealKey + '\',' + ii + ')">';
-     html += '<div class="recipe-item-check' + (idone ? ' done' : '') + '" id="ic_' + mealKey + '_' + ii + '"></div>';
-     html += '<span class="recipe-item-text' + (idone ? ' done' : '') + '" id="it_' + mealKey + '_' + ii + '">' + ing + '</span></div>';
-   });
+ // Meals — with snacks interleaved
+ var mealTypes = [
+ {key:'breakfast',label:'Breakfast',icon:'',snackAfter:false,snackIdx:-1},
+ {key:'lunch',label:'Lunch',icon:'',snackAfter:true,snackIdx:-1},
+ {key:'dinner',label:'Dinner',icon:'',snackAfter:false,snackIdx:-1}
+ ];
+  mealTypes.forEach(function(mt) {
+ var meal = dayData[mt.key];
+ var noteVal = notes[mt.key] || '';
+ var colId = 'meal_' + mt.key + '_' + i;
+ var ingChecked = loadData('ing_' + dateKey + '_' + mt.key, {});
+ var stepChecked = loadData('step_' + dateKey + '_' + mt.key, {});
+ html += '<div class="card">';
+ html += '<div class="card-header" onclick="toggleCollapsible(\'' + colId + '\')">';
+ html += '<span class="card-title">' + mt.label + '</span>';
+ html += '<span class="chevron" id="' + colId + '_chevron"></span></div>';
+ html += '<div class="collapsible" id="' + colId + '"><div class="card-body">';
+ html += '<div class="meal-name" style="margin-bottom:6px;">' + meal.name + '</div>';
+ html += '<p class="meal-desc">' + meal.desc + '</p>';
+ html += '<div class="recipe-section">';
+ html += '<div class="recipe-label">Ingredients</div>';
+ html += '<div class="recipe-list">';
+ (meal.ingredients || []).forEach(function(ing, ii) {
+ var idone = ingChecked[ii] || false;
+ html += '<div class="recipe-item" onclick="toggleIng(\'' + dateKey + '\',\'' + mt.key + '\',' + ii + ')">';
+ html += '<div class="recipe-item-check' + (idone ? ' done' : '') + '" id="ic_' + mt.key + '_' + ii + '"></div>';
+ html += '<span class="recipe-item-text' + (idone ? ' done' : '') + '" id="it_' + mt.key + '_' + ii + '">' + ing + '</span>';
+ html += '</div>';
+ });
+ html += '</div>';
+ html += '<div class="recipe-label" style="margin-top:14px">Steps</div>';
+ html += '<div class="recipe-steps">';
+ (meal.steps || []).forEach(function(step, si) {
+ var sdone = stepChecked[si] || false;
+ var stepHtml = step.replace(/[0-9]+ min/gi, function(match) {
+ var num = match.replace(/[^0-9]/g, '');
+ var secs = parseInt(num) * 60;
+ return match + '<button class="timer-btn" onclick="event.stopPropagation();startTimer(' + secs + ',\'' + num + ' min\')"> Start</button>';
+ });
+ html += '<div class="recipe-step" onclick="toggleStep(\'' + dateKey + '\',\'' + mt.key + '\',' + si + ')">';
+ html += '<div class="step-num' + (sdone ? ' done' : '') + '" id="sn_' + mt.key + '_' + si + '">' + (si+1) + '</div>';
+ html += '<div class="step-text' + (sdone ? ' done' : '') + '" id="st_' + mt.key + '_' + si + '">' + stepHtml + '</div>';
+ html += '</div>';
+ });
+ html += '</div></div>';
+ html += '<textarea class="notes-input" rows="3" placeholder="Add notes, swaps, extras..." onchange="saveMealNote(\'' + dateKey + '\',\'' + mt.key + '\',this.value)">' + noteVal + '</textarea>';
+  if (meal.emily) {
+ html += '<div style="margin-top:10px;padding:10px 12px;background:#daeef8;border-radius:12px;">';
+ html += '<span style="font-size:11px;font-weight:700;color:#5a9ab4;text-transform:uppercase;letter-spacing:0.5px;">For Emily</span>';
+ html += '<div style="font-size:14px;color:#2d3d2d;margin-top:2px;line-height:1.5;">' + meal.emily + '</div>';
+ html += '</div>';
+ }
+ if (meal.tip) {
+ html += '<div style="margin-top:8px;padding:10px 12px;background:var(--mint-light);border-radius:12px;border-left:3px solid var(--mint);">';
+ html += '<span style="font-size:11px;font-weight:700;color:#3dab8a;text-transform:uppercase;letter-spacing:0.5px;">Chef Tip</span>';
+ html += '<div style="font-size:14px;color:#2d3d2d;margin-top:2px;line-height:1.5;">' + meal.tip + '</div>';
+ html += '</div>';
+ } html += '</div></div></div>';
+ // Combined snack card after lunch (contains both snacks + notes)
+ if (mt.snackAfter) {
+   var snackChecked = loadData('snack_check_' + dateKey, {});
+   var snackNotes = loadData('snack_notes_' + dateKey, '');
+   html += '<div class="card" style="margin-bottom:12px;">';
+   html += '<div class="card-header" onclick="toggleCollapsible(\'snacks_col_' + dateKey + '\')">';
+   html += '<span class="card-title">Snacks</span>';
+   html += '<span class="chevron" id="snacks_col_' + dateKey + '_chevron"></span></div>';
+   html += '<div class="collapsible" id="snacks_col_' + dateKey + '"><div class="card-body">';
+   // Morning snack row
+   var isDone0 = snackChecked['snack_0'] || false;
+   html += '<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--sage-light);cursor:pointer;" onclick="toggleSnackCheck(\'' + dateKey + '\',\'snack_0\')">';
+   html += '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid ' + (isDone0 ? '#3dab8a' : '#c4d9c4') + ';background:' + (isDone0 ? '#3dab8a' : 'none') + ';display:flex;align-items:center;justify-content:center;" id="sc_snack_0">' + (isDone0 ? '<span style=\"color:white;font-size:11px;font-weight:700;\">&#10003;</span>' : '') + '</div>';
+   html += '<div><div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;">Morning</div>';
+   html += '<div style="font-size:15px;color:var(--text);font-weight:500;' + (isDone0 ? 'text-decoration:line-through;opacity:0.5;' : '') + '" id="st_snack_0">' + dayData.snack1.name + '</div></div>';
    html += '</div>';
-
-   html += '<div class="recipe-label" style="margin-top:14px">Steps</div><div class="recipe-steps">';
-   (meal.steps || []).forEach(function(step, si) {
-     var sdone = stepChecked[si] || false;
-     var stepHtml = step.replace(/[0-9]+(?:-[0-9]+)? ?min/gi, function(match) {
-       var num = parseInt(match);
-       var secs = num * 60;
-       return match + '<button class="timer-btn" onclick="event.stopPropagation();startTimer(' + secs + ',\'' + match + '\')">Start</button>';
-     });
-     html += '<div class="recipe-step" onclick="toggleStep(\'' + dateKey + '\',\'' + mealKey + '\',' + si + ')">';
-     html += '<div class="step-num' + (sdone ? ' done' : '') + '" id="sn_' + mealKey + '_' + si + '">' + (si+1) + '</div>';
-     html += '<div class="step-text' + (sdone ? ' done' : '') + '" id="st_' + mealKey + '_' + si + '">' + stepHtml + '</div></div>';
-   });
-   html += '</div></div>';
-
-   if (meal.emily) {
-     html += '<div style="margin-top:10px;padding:10px 12px;background:#daeef8;border-radius:12px;">';
-     html += '<span style="font-size:11px;font-weight:700;color:#5a9ab4;text-transform:uppercase;letter-spacing:0.5px;">For Emily</span>';
-     html += '<div style="font-size:15px;color:#2d3d2d;margin-top:2px;line-height:1.55;">' + meal.emily + '</div></div>';
-   }
-   if (meal.tip) {
-     html += '<div style="margin-top:8px;padding:10px 12px;background:var(--mint-light);border-radius:12px;border-left:3px solid var(--mint);">';
-     html += '<span style="font-size:11px;font-weight:700;color:#3dab8a;text-transform:uppercase;letter-spacing:0.5px;">Chef Tip</span>';
-     html += '<div style="font-size:15px;color:#2d3d2d;margin-top:2px;line-height:1.55;">' + meal.tip + '</div></div>';
-   }
-
-   if (extras.prep && extras.prep.length) {
-     var prepId = colId + '_prep';
-     html += '<div class="meal-meta-box"><div class="card-header" style="padding:0;" onclick="toggleCollapsible(\'' + prepId + '\')"><span class="meal-meta-label">Prep ahead</span><span class="chevron" id="' + prepId + '_chevron"></span></div>';
-     html += '<div class="collapsible" id="' + prepId + '"><div class="meal-meta-text"><ul style="padding-left:18px;">';
-     extras.prep.forEach(function(item){ html += '<li style="margin:4px 0;">' + item + '</li>'; });
-     html += '</ul></div></div></div>';
-   }
-   if (extras.backup && extras.backup.length) {
-     var backupId = colId + '_backup';
-     html += '<div class="meal-meta-box"><div class="card-header" style="padding:0;" onclick="toggleCollapsible(\'' + backupId + '\')"><span class="meal-meta-label">Backup option</span><span class="chevron" id="' + backupId + '_chevron"></span></div>';
-     html += '<div class="collapsible" id="' + backupId + '"><div class="meal-meta-text"><ul style="padding-left:18px;">';
-     extras.backup.forEach(function(item){ html += '<li style="margin:4px 0;">' + item + '</li>'; });
-     html += '</ul></div></div></div>';
-   }
-   if (extras.glenn) {
-     var glennId = colId + '_glenn';
-     html += '<div class="meal-meta-box"><div class="card-header" style="padding:0;" onclick="toggleCollapsible(\'' + glennId + '\')"><span class="meal-meta-label">Glenn option</span><span class="chevron" id="' + glennId + '_chevron"></span></div>';
-     html += '<div class="collapsible" id="' + glennId + '"><div class="meal-meta-text">' + extras.glenn + '</div></div></div>';
-   }
-
-   html += '<textarea class="notes-input" rows="4" placeholder="Add notes, swaps, extras..." onchange="saveMealNote(\'' + dateKey + '\',\'' + mealKey + '\',this.value)">' + noteVal + '</textarea>';
-   html += '</div></div>';
-
-   if (mealKey === 'lunch') {
-     var snackChecked = loadData('snack_check_' + dateKey, {});
-     var snackNotes = loadData('snack_notes_' + dateKey, '');
-     html += '<div class="card" style="margin-bottom:12px;">';
-     html += '<div class="card-header" onclick="toggleCollapsible(\'snacks_col_' + dateKey + '\')"><span class="card-title">Snacks</span><span class="chevron" id="snacks_col_' + dateKey + '_chevron"></span></div>';
-     html += '<div class="collapsible" id="snacks_col_' + dateKey + '"><div class="card-body">';
-     ['Morning','Afternoon'].forEach(function(lbl, idx){
-       var key = 'snack_' + idx;
-       var done = snackChecked[key] || false;
-       var name = idx === 0 ? dayData.snack1.name : dayData.snack2.name;
-       html += '<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--sage-light);cursor:pointer;" onclick="toggleSnackCheck(\'' + dateKey + '\',\'' + key + '\')">';
-       html += '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid ' + (done ? '#3dab8a' : '#c4d9c4') + ';background:' + (done ? '#3dab8a' : 'none') + ';display:flex;align-items:center;justify-content:center;" id="sc_' + key + '">' + (done ? '<span style="color:white;font-size:11px;font-weight:700;">&#10003;</span>' : '') + '</div>';
-       html += '<div><div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;">' + lbl + '</div><div style="font-size:15px;color:var(--text);font-weight:500;' + (done ? 'text-decoration:line-through;opacity:0.5;' : '') + '" id="st_' + key + '">' + name + '</div></div></div>';
-     });
-     html += '<textarea class="notes-input" rows="3" placeholder="What did you actually have? Emily reactions..." onchange="saveSnackNotes(\'' + dateKey + '\',this.value)">' + snackNotes + '</textarea>';
-     html += '</div></div></div>';
-   }
+   // Afternoon snack row
+   var isDone1 = snackChecked['snack_1'] || false;
+   html += '<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--sage-light);cursor:pointer;" onclick="toggleSnackCheck(\'' + dateKey + '\',\'snack_1\')">';
+   html += '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid ' + (isDone1 ? '#3dab8a' : '#c4d9c4') + ';background:' + (isDone1 ? '#3dab8a' : 'none') + ';display:flex;align-items:center;justify-content:center;" id="sc_snack_1">' + (isDone1 ? '<span style=\"color:white;font-size:11px;font-weight:700;\">&#10003;</span>' : '') + '</div>';
+   html += '<div><div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;">Afternoon</div>';
+   html += '<div style="font-size:15px;color:var(--text);font-weight:500;' + (isDone1 ? 'text-decoration:line-through;opacity:0.5;' : '') + '" id="st_snack_1">' + dayData.snack2.name + '</div></div>';
+   html += '</div>';
+   // Notes
+   html += '<textarea class="notes-input" rows="2" placeholder="What did you actually have? Emily reactions..." style="margin-top:10px;" onchange="saveSnackNotes(\'' + dateKey + '\',this.value)">' + snackNotes + '</textarea>';
+   html += '</div></div></div>';
+ }
  });
 
+
+
+ // Daily Check-in
  var sleepData = loadData('sleep_' + dateKey, {wake:'',bed:'',sick:'',emilyWake:'',emilyBed:'',emilyNapStart:'',emilyNapEnd:'',emilySick:''});
- html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'checkin_col\')"><span class="card-title">Check-In</span><span class="chevron" id="checkin_col_chevron"></span></div>';
- html += '<div class="collapsible" id="checkin_col"><div class="card-body">';
- html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Energy</div><div class="checkin-row">';
- [1,2,3,4,5].forEach(function(n){ html += '<button class="energy-btn' + (checkin.energy===n ? ' sel':'') + '" onclick="setEnergy(\'' + dateKey + '\',' + n + ')">' + n + '/5</button>'; });
+ html += '<div class="card">';
+html += '<div class="card-header" onclick="toggleCollapsible(\'checkin_col\')">';
+html += '<span class="card-title">Your Daily Check-in</span>';
+html += '<span class="chevron" id="checkin_col_chevron"></span></div>';
+html += '<div class="collapsible" id="checkin_col"><div class="card-body">';
+ html += '<div style="margin-bottom:14px;">';
+ html += '<div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Sleep & Wellness</div>';
+ html += '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">';
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Woke up</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.wake + '" onchange="saveSleepField(\'' + dateKey + '\',\'wake\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'wake\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;white-space:nowrap;">Clear</button></div></div>';
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Bedtime</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.bed + '" onchange="saveSleepField(\'' + dateKey + '\',\'bed\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'bed\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;white-space:nowrap;">Clear</button></div></div>';
  html += '</div>';
- html += '<div style="margin-top:12px;font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Bloating</div><div class="checkin-row">';
- ['None','Mild','Bad'].forEach(function(v){ html += '<button class="bloat-btn' + (checkin.bloat===v ? ' sel':'') + '" onclick="setBloat(\'' + dateKey + '\',\'' + v + '\')">' + v + '</button>'; });
+ html += '<div>';
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:6px;">You feeling sick?</label>';
+ html += '<div style="display:flex;gap:6px;">';
+ ['No','Yes'].forEach(function(v) {
+ html += '<button onclick="saveSleepField(\'' + dateKey + '\',\'sick\',\'' + v + '\')" style="flex:1;padding:7px;border-radius:10px;border:2px solid #c4d9c4;background:' + (sleepData.sick===v ? '#3dab8a' : 'none') + ';color:' + (sleepData.sick===v ? 'white' : '#7a9478') + ';font-size:13px;font-weight:600;cursor:pointer;" id="sick_' + v + '">' + v + '</button>';
+ });
+ html += '</div></div></div></div>';
+ html += '<div style="height:1px;background:#e8f0e8;margin:4px 0 12px;"></div>';
+ html += '<div style="margin-bottom:12px;">';
+ html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Energy level</div>';
+ html += '<div class="checkin-row">';
+ for (var e = 1; e <= 5; e++) {
+ html += '<button class="energy-btn' + (checkin.energy === e ? ' sel' : '') + '" id="eb_' + e + '" onclick="setEnergy(\'' + dateKey + '\',' + e + ')">' + e + '</button>';
+ }
+ html += '</div></div>';
+  html += '<div><div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Bloating</div>';
+ html += '<div class="checkin-row">';
+ ['None','Mild','Bad'].forEach(function(b) {
+ html += '<button class="bloat-btn' + (checkin.bloat === b ? ' sel' : '') + '" id="bb_' + b + '" onclick="setBloat(\'' + dateKey + '\',\'' + b + '\')">' + b + '</button>';
+ });
  html += '</div>';
- html += '<div class="divider"></div>';
- html += '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.wake + '" onchange="saveSleepField(\'' + dateKey + '\',\'wake\',this.value)"></div><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.bed + '" onchange="saveSleepField(\'' + dateKey + '\',\'bed\',this.value)"></div></div>';
- html += '<div class="divider"></div>';
+ if (bloatTs.time) {
+   html += '<div id="bloat_ts_display" style="font-size:11px;color:#3dab8a;font-weight:600;margin-top:4px;">' + bloatTs.val + ' logged at ' + bloatTs.time + '</div>';
+ } else {
+   html += '<div id="bloat_ts_display" style="font-size:11px;color:#3dab8a;font-weight:600;margin-top:4px;"></div>';
+ }
+ html += '</div>';
+
+ // Eating quality
  var eatingQ = loadData('eating_q_' + dateKey, '');
- html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Eating today</div><div class="checkin-row">';
+ html += '<div style="margin-top:12px;">';
+ html += '<div style="font-size:12px;font-weight:600;color:#7a9478;margin-bottom:8px;">Eating today</div>';
+ html += '<div class="checkin-row">';
  ['Light','On Track','Indulgent'].forEach(function(q) {
    var colors = {Light:'#7ab8d4',OnTrack:'#3dab8a',Indulgent:'#c084fc'};
    var key = q.replace(' ','');
    var sel = eatingQ === q;
-   html += '<button onclick="setEatingQ(\'' + dateKey + '\',\'' + q + '\')" style="padding:6px 14px;border-radius:20px;border:2px solid #c4d9c4;background:' + (sel ? (colors[key]||'#3dab8a') : 'none') + ';color:' + (sel ? 'white' : '#7a9478') + ';font-size:12px;font-weight:600;cursor:pointer;">' + q + '</button>';
+   html += '<button id="eq_' + key + '" onclick="setEatingQ(\'' + dateKey + '\',\'' + q + '\')" style="padding:6px 14px;border-radius:20px;border:2px solid #c4d9c4;background:' + (sel ? (colors[key]||'#3dab8a') : 'none') + ';color:' + (sel ? 'white' : '#7a9478') + ';font-size:12px;font-weight:600;cursor:pointer;">' + q + '</button>';
  });
- html += '</div>';
+ html += '</div></div>';
+
  if (isSunday(i)) {
-   var wVal = weighin[dateKey] || '';
-   var prevSun = getPrevSundayWeight(i);
-   html += '<div class="divider"></div><div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:6px;">Sunday Weigh-In</div><div class="weigh-input-row">';
-   html += '<input class="weigh-input" type="number" step="0.1" placeholder="lbs" value="' + wVal + '" id="weigh_input_' + dateKey + '"><button class="save-btn" onclick="saveWeighIn(\'' + dateKey + '\')">Save</button></div>';
-   if (prevSun && wVal) {
-     var delta = parseFloat(wVal) - parseFloat(prevSun);
-     var sign = delta >= 0 ? '+' : '';
-     html += '<div style="margin-top:6px;font-size:12px;color:#7a9478;">vs last weigh-in: <span style="font-weight:700;color:' + (delta <= 0 ? '#3dab8a' : '#e06060') + '">' + sign + delta.toFixed(1) + ' lbs</span></div>';
-   }
+ var wVal = weighin[dateKey] || '';
+ var prevSun = getPrevSundayWeight(i);
+ html += '<div class="divider"></div>';
+ html += '<div style="font-size:12px;font-weight:700;color:#3dab8a;margin-bottom:6px;"> Sunday Weigh-In</div>';
+ html += '<div class="weigh-input-row">';
+ html += '<input class="weigh-input" type="number" step="0.1" placeholder="lbs" value="' + wVal + '" id="weigh_input_' + dateKey + '">';
+ html += '<button class="save-btn" onclick="saveWeighIn(\'' + dateKey + '\')">Save</button>';
+ html += '</div>';
+ if (prevSun && wVal) {
+ var delta = parseFloat(wVal) - parseFloat(prevSun);
+ var sign = delta >= 0 ? '+' : '';
+ html += '<div style="margin-top:6px;font-size:12px;color:#7a9478;">vs last weigh-in: <span style="font-weight:700;color:' + (delta <= 0 ? '#3dab8a' : '#e06060') + '">' + sign + delta.toFixed(1) + ' lbs</span></div>';
+ }
  }
  html += '</div></div></div>';
 
- html += '<div class="card"><div class="card-header" onclick="toggleCollapsible(\'emily_col\')"><span class="card-title">Emily</span><span class="chevron" id="emily_col_chevron"></span></div>';
- html += '<div class="collapsible" id="emily_col"><div class="card-body">';
+ // --- EMILY'S DAY CARD ---
+ html += '<div class="card">';
+html += '<div class="card-header" onclick="toggleCollapsible(\'emily_col\')">';
+html += '<span class="card-title">Emily</span>';
+html += '<span class="chevron" id="emily_col_chevron"></span></div>';
+html += '<div class="collapsible" id="emily_col"><div class="card-body">';
+ // Load yesterday's sleep data for comparison
+ var prevDateKey = i > 0 ? getDayDate(i-1) : null;
+ var prevSleep = prevDateKey ? loadData('sleep_' + prevDateKey, {}) : {};
+ function toM(t) { if (!t) return null; var p=t.split(':'); return parseInt(p[0])*60+parseInt(p[1]); }
+ function fmtFb(msg, good, neutral) { var bg = neutral ? '#f0f4f0' : (good?'#d4f0e8':'#fde8e8'); var col = neutral ? '#7a9478' : (good?'#3dab8a':'#e06060'); return '<div style="margin-top:6px;margin-bottom:8px;padding:7px 10px;border-radius:8px;background:' + bg + ';font-size:12px;font-weight:600;color:' + col + ';">' + msg + '</div>'; }
  html += '<div style="font-size:12px;font-weight:700;color:#7ab8d4;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Sleep (goal: 8pm bedtime)</div>';
- html += '<div style="display:flex;flex-direction:column;gap:8px;">';
- [['emilyWake','Woke up'],['emilyNapStart','Nap start'],['emilyNapEnd','Nap end'],['emilyBed','Bedtime']].forEach(function(cfg){
-   html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">' + cfg[1] + '</label>';
-   html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">';
-   html += '<div class="time-input-wrap" style="max-width:190px;width:100%;"><input type="time" class="time-input" value="' + (sleepData[cfg[0]]||'') + '" id="sleep_' + cfg[0] + '_' + dateKey + '"></div>';
-   html += '<button type="button" class="save-btn" style="padding:10px 14px;white-space:nowrap;" onclick="saveSleepInputValue(\'' + dateKey + '\',\'' + cfg[0] + '\')">Save</button>';
-   html += '<button type="button" onclick="clearSleepField(\'' + dateKey + '\',\'' + cfg[0] + '\')" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Clear</button>';
-   html += '</div></div>';
+ html += '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;">';
+ // WAKE UP
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Woke up (AM)</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.emilyWake + '" onchange="saveSleepField(\'' + dateKey + '\',\'emilyWake\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'emilyWake\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Clear</button></div>';
+ if (sleepData.emilyWake) {
+   var wakeM = toM(sleepData.emilyWake);
+   var prevWakeM = toM(prevSleep.emilyWake);
+   var napWindowM = wakeM + 5*60;
+   var napH = Math.floor(napWindowM/60)%12||12; var napMin = napWindowM%60;
+   var napWinStr = napH + ':' + (napMin<10?'0':'') + napMin + (napWindowM>=12*60?'pm':'am');
+   var wakeMsg = 'Nap window opens around ' + napWinStr + ' (5hrs after wake)';
+   var wakeGood = true;
+   if (prevWakeM !== null) { wakeGood = wakeM <= prevWakeM; wakeMsg = (wakeGood ? 'Up earlier than yesterday! ' : 'Up later than yesterday. ') + 'Nap window: ' + napWinStr; }
+   html += fmtFb(wakeMsg, wakeGood, prevWakeM === null);
+ }
+ html += '</div>';
+ // BEDTIME
+ html += '<div style="font-size:12px;font-weight:700;color:#7ab8d4;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Nap (max 1.5 hrs)</div>';
+ html += '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;">';
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Nap start</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.emilyNapStart + '" onchange="saveSleepField(\'' + dateKey + '\',\'emilyNapStart\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'emilyNapStart\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Clear</button></div>';
+ if (sleepData.emilyNapStart) {
+   var nsM = toM(sleepData.emilyNapStart); var prevNsM = toM(prevSleep.emilyNapStart);
+   var estBed = nsM + 90 + 5*60;
+   var napGood = estBed <= 20*60;
+   var estBedH = Math.floor(estBed/60)%12||12; var estBedMin = estBed%60; var estBedStr = estBedH+':'+(estBedMin<10?'0':'')+estBedMin+(estBed>=12*60?'pm':'am');
+   var napMsg = napGood ? 'Way to go! Expect bedtime around ' + estBedStr : 'Expect bedtime around ' + estBedStr + '. Earlier nap = earlier bedtime.';
+   if (prevNsM !== null) { if (nsM < prevNsM) { napGood = true; napMsg = 'Nap earlier than yesterday — way to go! On track for 8pm bedtime.'; } else if (nsM > prevNsM) { napMsg = 'Nap later than yesterday — watch bedtime tonight.'; } }
+   html += fmtFb(napMsg, napGood, prevNsM === null && napGood);
+ }
+ html += '</div>';
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Nap end</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.emilyNapEnd + '" onchange="saveSleepField(\'' + dateKey + '\',\'emilyNapEnd\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'emilyNapEnd\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Clear</button></div>';
+ if (sleepData.emilyNapEnd) {
+   var neM = toM(sleepData.emilyNapEnd); var pmWin = neM + 5*60;
+   var pmH = Math.floor(pmWin/60)%12||12; var pmMin = pmWin%60;
+   html += fmtFb('Bedtime window opens around ' + pmH + ':' + (pmMin<10?'0':'') + pmMin + 'pm (5hrs after nap)', pmWin<=20*60, true);
+ }
+ html += '</div>';
+ // Nap duration
+ if (sleepData.emilyNapStart && sleepData.emilyNapEnd) {
+   var spx=sleepData.emilyNapStart.split(':'); var epx=sleepData.emilyNapEnd.split(':');
+   var ndMins=(parseInt(epx[0])*60+parseInt(epx[1]))-(parseInt(spx[0])*60+parseInt(spx[1]));
+   if (ndMins>0) { var ndH=Math.floor(ndMins/60); var ndM=ndMins%60; var ndStr=(ndH>0?ndH+'h ':'')+(ndM+'m'); var over=ndMins>90; html += fmtFb(over?'Nap was '+ndStr+' — over 1.5hr limit':'Nap: '+ndStr+' — within limit',!over); }
+ }
+ html += '</div>';
+  html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:4px;">Bedtime (PM)</label>';
+ html += '<div style="display:flex;align-items:center;gap:6px;"><div class="time-input-wrap"><input type="time" class="time-input" value="' + sleepData.emilyBed + '" onchange="saveSleepField(\'' + dateKey + '\',\'emilyBed\',this.value)"></div><button onclick="clearSleepField(\'' + dateKey + '\',\'emilyBed\')" style="padding:4px 8px;border-radius:8px;border:1.5px solid var(--sage-mid);background:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Clear</button></div>';
+ if (sleepData.emilyBed) {
+   var bedM = toM(sleepData.emilyBed); var prevBedM = toM(prevSleep.emilyBed);
+   var onTrack = bedM <= 20*60;
+   var bedMsg = onTrack ? 'On track for 8pm bedtime!' : 'Past 8pm goal — ' + sleepData.emilyBed;
+   var bedGood = onTrack;
+   if (prevBedM !== null) { if (bedM < prevBedM) { bedGood = true; bedMsg = onTrack ? 'Earlier than yesterday AND on track — great!' : 'Earlier than yesterday! Getting closer to 8pm.'; } else if (bedM > prevBedM) { bedMsg = 'Later than yesterday — try an earlier nap tomorrow.'; } }
+   html += fmtFb(bedMsg, bedGood);
+ }
+ html += '</div></div>';
+ // NAP
+ html += '<div><label style="font-size:12px;color:#7a9478;font-weight:600;display:block;margin-bottom:6px;">Emily sick?</label>';
+ html += '<div style="display:flex;gap:6px;">';
+ ['No','Yes'].forEach(function(v) {
+ html += '<button onclick="saveSleepField(\'' + dateKey + '\',\'emilySick\',\'' + v + '\')" style="flex:1;padding:7px;border-radius:10px;border:2px solid #c4d9c4;background:' + (sleepData.emilySick===v ? '#7ab8d4' : 'none') + ';color:' + (sleepData.emilySick===v ? 'white' : '#7a9478') + ';font-size:13px;font-weight:600;cursor:pointer;" id="emilySick_' + v + '">' + v + '</button>';
  });
  html += '</div>';
+ // Emily notes
  var emilyNotes = loadData('emily_notes_' + dateKey, '');
- html += '<textarea class="notes-input" rows="4" placeholder="How did Emily do today? Sleep, mood, eating, anything notable..." onchange="saveEmilyNotes(\'' + dateKey + '\',this.value)">' + emilyNotes + '</textarea>';
+ html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--sage-light);">';
+ html += '<div style="font-size:11px;font-weight:700;color:#7ab8d4;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">Notes</div>';
+ html += '<textarea class="notes-input" rows="2" placeholder="How did Emily do today? Sleep, mood, eating, anything notable..." onchange="saveEmilyNotes(\'' + dateKey + '\',this.value)">' + emilyNotes + '</textarea>';
+ html += '</div>';
  html += '</div></div></div>';
 
  document.getElementById('meals-content').innerHTML = html;
@@ -1014,18 +1059,35 @@ function toggleSchedule(dateKey, itemKey) {
  var checklist = loadData('sched_' + dateKey, {});
  checklist[itemKey] = !checklist[itemKey];
  saveData('sched_' + dateKey, checklist);
+ // Sync to habits
  if (SCHEDULE_TO_HABIT[itemKey]) {
-   var habitKey = SCHEDULE_TO_HABIT[itemKey];
-   var habits = loadData('habits', {});
-   if (!habits[dateKey]) habits[dateKey] = {};
-   habits[dateKey][habitKey] = checklist[itemKey];
-   saveData('habits', habits);
+ var habitKey = SCHEDULE_TO_HABIT[itemKey];
+ var habits = loadData('habits', {});
+ if (!habits[dateKey]) habits[dateKey] = {};
+ habits[dateKey][habitKey] = checklist[itemKey];
+ saveData('habits', habits);
  }
+ // Update DOM in-place — no full re-render so collapsibles stay open
+ var done = checklist[itemKey];
+ var checkEl = document.getElementById('sc_' + itemKey);
+ var labelEl = document.getElementById('sl_' + itemKey);
+ var tsEl = document.getElementById('ts_' + itemKey);
+ if (checkEl) { checkEl.className = 'sched-check' + (done ? ' done' : ''); }
+ if (labelEl) { labelEl.className = 'sched-label' + (done ? ' done' : ''); }
+ // Save and show timestamp
  var timestamps = loadData('sched_ts_' + dateKey, {});
- if (checklist[itemKey]) timestamps[itemKey] = getTimeStampET(); else delete timestamps[itemKey];
+ if (done) {
+ var now = new Date();
+ var hrs = now.getHours();
+ var mins = now.getMinutes();
+ var ampm = hrs >= 12 ? 'pm' : 'am';
+ hrs = hrs % 12 || 12;
+ timestamps[itemKey] = hrs + ':' + (mins < 10 ? '0' : '') + mins + ampm;
+ } else {
+ delete timestamps[itemKey];
+ }
  saveData('sched_ts_' + dateKey, timestamps);
- renderMeals();
- openCollapsible('sched_col');
+ if (tsEl) { tsEl.textContent = done ? timestamps[itemKey] : ''; }
 }
 
 function toggleSnackCheck(dateKey, key) {
@@ -1049,12 +1111,6 @@ function toggleSnackCheck(dateKey, key) {
 function saveEmilyNotes(dateKey, val) {
   saveData('emily_notes_' + dateKey, val);
 }
-function saveSleepInputValue(dateKey, field) {
- var input = document.getElementById('sleep_' + field + '_' + dateKey);
- if (!input) return;
- saveSleepField(dateKey, field, input.value);
-}
-
 
 function saveSnackNotes(dateKey, val) {
   saveData('snack_notes_' + dateKey, val);
@@ -1111,7 +1167,7 @@ function saveBonusLog(dateKey, val) {
 }
 
 function toggleMoveCheck() {
-  var todayKey = getTodayET();
+  var todayKey = new Date().toISOString().slice(0,10);
   var moveChecked = loadData('move_check', {});
   moveChecked[todayKey] = !moveChecked[todayKey];
   saveData('move_check', moveChecked);
@@ -1126,18 +1182,18 @@ function logWalkMins() {
   var mins = parseInt(inp.value);
   if (isNaN(mins) || mins < 1) return;
   var walkLog = loadData('walk_log', {});
-  var todayKey = getTodayET();
+  var todayKey = new Date().toISOString().slice(0,10);
   walkLog[todayKey] = mins;
   saveData('walk_log', walkLog);
   if (mins >= 20) {
     autoCheckWalkGoal();
     // Also check the 'walk' schedule item for today
-    var todaySched = loadData('sched_ts_' + getTodayET(), {});
-    todaySched['walk'] = getTimeStampET();
-    saveData('sched_ts_' + getTodayET(), todaySched);
-    var schedChecked = loadData('sched_check_' + getTodayET(), {});
+    var todaySched = loadData('sched_ts_' + new Date().toISOString().slice(0,10), {});
+    todaySched['walk'] = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    saveData('sched_ts_' + new Date().toISOString().slice(0,10), todaySched);
+    var schedChecked = loadData('sched_check_' + new Date().toISOString().slice(0,10), {});
     schedChecked['walk'] = true;
-    saveData('sched_check_' + getTodayET(), schedChecked);
+    saveData('sched_check_' + new Date().toISOString().slice(0,10), schedChecked);
     showToast('Walk logged: ' + mins + ' min — goal hit!');
   } else {
     showToast('Walk logged: ' + mins + ' min');
@@ -1297,40 +1353,74 @@ function saveWeighIn(dateKey) {
 // HABITS TAB
 // ============================================================
 function renderHabits() {
- var weekDays = getWeekDaysForCurrentGrocery();
+ var wk = state.currentHabitsWeek;
+ var weekDays = wk === 1 ? DAYS.slice(0,7) : DAYS.slice(7,13);
  var habits = loadData('habits', {});
+
  var html = '';
- html += '<div class="card"><div class="card-header"><span class="card-title">Habit Tracker</span><span style="font-size:12px;color:var(--text-muted);font-weight:600;">Current grocery week</span></div>';
+ html += '<div class="week-tab">';
+ html += '<button class="week-tab-btn' + (wk===1?' active':'') + '" onclick="setHabitsWeek(1)">Week 1: Mar 19–25</button>';
+ html += '<button class="week-tab-btn' + (wk===2?' active':'') + '" onclick="setHabitsWeek(2)">Week 2: Mar 26–31</button>';
+ html += '</div>';
+
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Habit Tracker</span></div>';
  html += '<div class="card-body" style="padding-top:0">';
  html += '<div class="habit-grid"><table class="habit-table"><colgroup><col class="habit-label-col">';
- for (var ci = 0; ci < weekDays.length; ci++) html += '<col class="habit-day-col">';
- html += '</colgroup><thead><tr><th class="habit-name-cell">Habit</th>';
- var todayStr = getTodayET();
+ for (var ci = 0; ci < weekDays.length; ci++) { html += '<col class="habit-day-col">'; }
+ html += '</colgroup>';
+ html += '<thead><tr><th class="habit-name-cell">Habit</th>';
+ var _tnow = new Date(); var _tutc = _tnow.getTime() + _tnow.getTimezoneOffset()*60000; var _tet = new Date(_tutc + (-5)*3600000); var todayStr = _tet.getFullYear() + '-' + String(_tet.getMonth()+1).padStart(2,'0') + '-' + String(_tet.getDate()).padStart(2,'0');
  weekDays.forEach(function(d) {
-   var dd = new Date(d.date + 'T12:00:00');
-   var isToday = d.date === todayStr;
-   var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-   html += '<th' + (isToday ? ' style="background:rgba(61,171,138,0.12);border-radius:10px 10px 0 0;color:#3dab8a;font-weight:800;"' : '') + '>' + days[dd.getDay()] + '<br><span style="font-weight:400;color:' + (isToday ? '#3dab8a' : '#aac4aa') + '">' + dd.getDate() + '</span></th>';
+ var dd = new Date(d.date + 'T12:00:00');
+ var isToday = d.date === todayStr;
+ var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+ if (isToday) {
+   html += '<th style="background:rgba(61,171,138,0.12);border-radius:10px 10px 0 0;border-top:2px solid #3dab8a;border-left:2px solid #3dab8a;border-right:2px solid #3dab8a;color:#3dab8a;font-weight:800;">';
+ } else {
+   html += '<th>';
+ }
+ html += days[dd.getDay()] + '<br><span style="font-weight:400;color:' + (isToday ? '#3dab8a' : '#aac4aa') + '">' + dd.getDate() + '</span></th>';
  });
  html += '</tr></thead><tbody>';
+
  HABITS.forEach(function(hab) {
-   html += '<tr><td class="habit-name-cell">' + hab.label + '</td>';
-   weekDays.forEach(function(d) {
-     var done = habits[d.date] && habits[d.date][hab.key];
-     var isTodayCol = d.date === todayStr;
-     html += '<td style="' + (isTodayCol ? 'background:rgba(61,171,138,0.08);' : '') + '"><div class="habit-dot' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + d.date + '\',\'' + hab.key + '\')"></div></td>';
-   });
-   html += '</tr>';
+ html += '<tr><td class="habit-name-cell">' + hab.label + '</td>';
+ weekDays.forEach(function(d) {
+ var dk = d.date;
+ var done = habits[dk] && habits[dk][hab.key];
+ var isTodayCol = dk === todayStr;
+ var tdStyle = isTodayCol ? 'background:rgba(61,171,138,0.08);border-left:2px solid #3dab8a;border-right:2px solid #3dab8a;' : '';
+ html += '<td style="' + tdStyle + '"><div class="habit-dot' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + dk + '\',\'' + hab.key + '\')"></div></td>';
  });
- html += '</tbody></table></div></div></div>';
- html += '<div class="card"><div class="card-header"><span class="card-title">Completion</span></div><div class="card-body"><div class="score-bar-wrap">';
+ html += '</tr>';
+ });
+ // Bottom border row for today column
+ html += '<tr>';
+ weekDays.forEach(function(d) {
+   var isTodayCol = d.date === todayStr;
+   html += '<td style="padding:0;height:4px;' + (isTodayCol ? 'background:rgba(61,171,138,0.08);border-left:2px solid #3dab8a;border-right:2px solid #3dab8a;border-bottom:2px solid #3dab8a;border-radius:0 0 10px 10px;' : '') + '"></td>';
+ });
+ html += '</tr>';
+ html += '</tbody></table></div>';
+ html += '</div></div>';
+
+ // Score bars
+ html += '<div class="card"><div class="card-header"><span class="card-title"> Completion</span></div>';
+ html += '<div class="card-body"><div class="score-bar-wrap">';
  HABITS.forEach(function(hab) {
-   var total = weekDays.length, done = 0;
-   weekDays.forEach(function(d){ if (habits[d.date] && habits[d.date][hab.key]) done++; });
-   var pct = total ? Math.round(done/total*100) : 0;
-   html += '<div class="score-bar-row"><div class="score-bar-label">' + hab.label + '</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:' + pct + '%"></div></div><div class="score-pct">' + pct + '%</div></div>';
+ var total = 0; var done = 0;
+ weekDays.forEach(function(d) {
+ total++;
+ if (habits[d.date] && habits[d.date][hab.key]) done++;
+ });
+ var pct = total > 0 ? Math.round(done/total*100) : 0;
+ html += '<div class="score-bar-row">';
+ html += '<div class="score-bar-label">' + hab.label + '</div>';
+ html += '<div class="score-bar-bg"><div class="score-bar-fill" style="width:' + pct + '%"></div></div>';
+ html += '<div class="score-pct">' + pct + '%</div></div>';
  });
  html += '</div></div></div>';
+
  document.getElementById('habits-content').innerHTML = html;
 }
 
@@ -1413,7 +1503,7 @@ function renderWalk() {
  }
 
  var walkLog = loadData('walk_log', {});
- var todayKey = getTodayET();
+ var _n=new Date();var _u=_n.getTime()+_n.getTimezoneOffset()*60000;var _e=new Date(_u+(-5)*3600000);var todayKey=_e.getFullYear()+'-'+String(_e.getMonth()+1).padStart(2,'0')+'-'+String(_e.getDate()).padStart(2,'0');
  var loggedMins = walkLog[todayKey] || '';
  // Pick today's move based on day of year so it changes daily
  var now = new Date();
@@ -1441,17 +1531,21 @@ function renderWalk() {
  if (loggedMins) html += '<span style="font-size:13px;color:#3dab8a;font-weight:600;">' + loggedMins + ' min ✓</span>';
  html += '</div></div>';
  html += '<div style="border-top:1px solid var(--sage-light);padding-top:12px;">';
- html += '<div class="meal-meta-box"><div class="card-header" style="padding:0;" onclick="toggleCollapsible(\'walk_move_col\')"><span class="meal-meta-label">Move of the day</span><span class="chevron" id="walk_move_col_chevron"></span></div>';
- html += '<div class="collapsible" id="walk_move_col"><div class="meal-meta-text">';
- html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">A quick bodyweight or dumbbell move you can do at home — tap to check off when done.</div>';
- html += '<div style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:6px;" onclick="toggleMoveCheck()">';
+ html += '<div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Move of the Day</div>';
+ html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">A quick bodyweight or dumbbell move you can do at home — tap to check off when done. Changes daily.</div>';
+ html += '<div style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:14px;" onclick="toggleMoveCheck()">';
  html += '<div style="width:22px;height:22px;border-radius:50%;border:2px solid ' + (moveDone ? '#3dab8a' : '#c4d9c4') + ';background:' + (moveDone ? '#3dab8a' : 'none') + ';flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;" id="move_check_circle">' + (moveDone ? '<span style=\"color:white;font-size:11px;font-weight:700;\">&#10003;</span>' : '') + '</div>';
- html += '<div><div style="font-size:16px;font-weight:700;color:var(--text);' + (moveDone ? 'text-decoration:line-through;opacity:0.5;' : '') + '">' + todayMove.move + '</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px;">' + todayMove.tip + '</div></div></div>';
- html += '</div></div></div>';
+ html += '<div><div style="font-size:16px;font-weight:700;color:var(--text);' + (moveDone ? 'text-decoration:line-through;opacity:0.5;' : '') + '">' + todayMove.move + '</div>';
+ html += '<div style="font-size:13px;color:var(--text-muted);margin-top:3px;">' + todayMove.tip + '</div></div>';
+ html += '</div>';
+ // Bonus log
  var bonusLog = loadData('bonus_log', {});
  var bonusToday = bonusLog[todayKey] || '';
- html += '<div class="meal-meta-box"><div class="card-header" style="padding:0;" onclick="toggleCollapsible(\'walk_bonus_col\')"><span class="meal-meta-label">Bonus activity</span><span class="chevron" id="walk_bonus_col_chevron"></span></div>';
- html += '<div class="collapsible" id="walk_bonus_col"><div class="meal-meta-text"><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Yoga, stretching, dance with Emily, stairs — anything counts.</div><textarea class="notes-input" rows="3" placeholder="e.g. 10 min yoga, danced with Emily, took stairs all day..." onchange="saveBonusLog(\'' + todayKey + '\',this.value)" style="margin-bottom:0;">' + bonusToday + '</textarea></div></div></div>';
+ html += '<div style="border-top:1px solid var(--sage-light);padding-top:10px;">';
+ html += '<div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">Bonus Activity</div>';
+ html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Did something extra? Log it here — yoga, stretching, dance with Emily, stairs, anything counts.</div>';
+ html += '<textarea class="notes-input" rows="2" placeholder="e.g. 10 min yoga, danced with Emily, took stairs all day..." onchange="saveBonusLog(\'' + todayKey + '\',this.value)" style="margin-bottom:0;">' + bonusToday + '</textarea>';
+ html += '</div>';
  html += '</div>';
  html += '</div></div>';
  html += '<div class="card"><div class="card-header"><span class="card-title"> 30-Day Challenge</span></div>';
@@ -1694,7 +1788,7 @@ function renderAnalytics() {
  var tips = [
  '🩸 Iron rule: Take at 9pm on empty stomach (2+ hrs after dinner) with OJ. No coffee or calcium within 1 hr.',
  ' Magnesium at 10pm — at least 1 hr after iron.',
- ' Keep the base meal mild for family, then add spice to your own portion after plating. Toddler eats everything you eat (plainer).',
+ ' Mild food only — no spice, chili, jalapeños. Toddler eats everything you eat (plainer).',
  ' Hydration goal: ~72oz daily. Coffee counts; peppermint tea counts.',
  ' Big breakfast rule: aim for protein-rich, filling morning meal to support energy and weight loss.',
  ' D3+K2: take with the fattiest meal of the day (usually dinner or big breakfast).',
@@ -1971,36 +2065,6 @@ function exportForClaude() {
   }
 }
 
-function exportAppData() {
-  try {
-    var payload = {};
-    Object.keys(localStorage).forEach(function(k){
-      if (k.indexOf('wj_') === 0 || k === 'wj_state_v2') payload[k] = localStorage.getItem(k);
-    });
-    var text = JSON.stringify(payload);
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function(){ showToast('App data copied'); });
-    } else {
-      window.prompt('Copy your app data:', text);
-    }
-  } catch (e) {
-    showToast('Export failed');
-  }
-}
-
-function importAppData() {
-  var pasted = window.prompt('Paste exported app data JSON here');
-  if (!pasted) return;
-  try {
-    var payload = JSON.parse(pasted);
-    Object.keys(payload).forEach(function(k){ localStorage.setItem(k, payload[k]); });
-    showToast('Imported! Reloading...');
-    setTimeout(function(){ location.reload(); }, 400);
-  } catch (e) {
-    showToast('Import failed');
-  }
-}
-
 // ============================================================
 // DARK MODE
 // ============================================================
@@ -2028,10 +2092,8 @@ function initDarkMode() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
  loadState();
- var seedWeigh = loadData('weighin', {});
- if (!seedWeigh['2026-03-22']) { seedWeigh['2026-03-22'] = 167; saveData('weighin', seedWeigh); }
  // Auto-navigate to current day based on today's date
- var today = getTodayET();
+ var today = new Date().toISOString().slice(0,10);
  var todayIdx = -1;
  for (var di = 0; di < DAYS.length; di++) {
    if (DAYS[di].date === today) { todayIdx = di; break; }
